@@ -6,8 +6,19 @@ a4paper
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
 \inputencoding{utf8}
-\title{DBS Projekt SS2014}
+\usepackage{ulem} % underline styles
+\usepackage{tikz} % for double underlines
+\newcommand{\udensdash}[1]{%
+    \tikz[baseline=(todotted.base)]{
+        \node[inner sep=1pt,outer sep=1pt] (todotted) {#1};
+        \draw[densely dashed] (todotted.south west) -- (todotted.south east);
+    }%
+}%
 
+%\udensdash{\underline{PrimAndForeignKey}}
+
+
+\title{DBS Projekt SS2014}
 \author{Jan Cortes, Frederic Prackwieser, Franz Rhee}
 \date{}
 
