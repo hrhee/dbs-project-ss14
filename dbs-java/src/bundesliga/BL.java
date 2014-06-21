@@ -39,8 +39,8 @@ public class BL {
     tableName[1] = "Verein";
     tableName[2] = "Spieler";
     tableName[3] = "Spiel";
-    tableName[4] = "spielt_fuer";
-    tableName[5] = "spielt_in";
+    tableName[4] = "Spielt_fuer";
+    tableName[5] = "Spielt_in";
   }
 
   public void init_src() {
@@ -141,9 +141,9 @@ public class BL {
     for ( int i=5; i>=0; i-- ) {
       try {
         Statement stmt = conn_dst.createStatement();
-        String s = "DROP TABLE " + tableName[i];
+        String s = "DROP TABLE IF EXISTS " + tableName[i];
         System.out.println(s);
-        stmt.executeUpdate( "DROP TABLE " + tableName[i] );
+        stmt.executeUpdate( "DROP TABLE IF EXISTS " + tableName[i] );
         System.out.println("Table '"+tableName[i]+"' dropped.");
         this.close_st(stmt);
       } catch (SQLException e) {
@@ -157,19 +157,19 @@ public class BL {
   public void createTables() {
     String [] sql  = new String[6];
     String [] alt  = new String[6];
-    sql[0]  ="CREATE TABLE IF NOT EXISTS `Liga` (`Id` int(11) NOT NULL, `Name` varchar(40) COLLATE utf8_unicode_ci NOT NULL, PRIMARY KEY (`Id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-    sql[1]  ="CREATE TABLE IF NOT EXISTS `Verein` (`Id` int(11) NOT NULL, `Name` varchar(255) COLLATE utf8_unicode_ci NOT NULL, PRIMARY KEY (`Id`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-    sql[2]  ="CREATE TABLE IF NOT EXISTS `Spieler` ( `Id` int(11) NOT NULL, `Name` varchar(255) COLLATE utf8_unicode_ci NOT NULL, `TrikotNr` int(11) NOT NULL, `Heimatland` varchar(255) COLLATE utf8_unicode_ci NOT NULL, PRIMARY KEY (`Id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+    sql[0]  = "CREATE TABLE IF NOT EXISTS `Liga` (`Id` int(1) NOT NULL, `Name` varchar(40) COLLATE utf8_unicode_ci NOT NULL, PRIMARY KEY (`Id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+    sql[1]  = "CREATE TABLE IF NOT EXISTS `Verein` (`Id` int(11) NOT NULL, `Name` varchar(255) COLLATE utf8_unicode_ci NOT NULL, PRIMARY KEY (`Id`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+    sql[2]  = "CREATE TABLE IF NOT EXISTS `Spieler` ( `Id` int(11) NOT NULL, `Name` varchar(255) COLLATE utf8_unicode_ci NOT NULL, `TrikotNr` int(11) NOT NULL, `Heimatland` varchar(255) COLLATE utf8_unicode_ci NOT NULL, PRIMARY KEY (`Id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
     sql[3]  = "CREATE TABLE IF NOT EXISTS `Spiel` ( `Id` int(11) NOT NULL, `Spieltag` int(11) NOT NULL, `Datum` date NOT NULL, `Uhrzeit` time NOT NULL, `ToreHeim` int(11) NOT NULL, `ToreAus` int(11) NOT NULL, `Heim` int(11) NOT NULL, `Aus` int(11) NOT NULL, PRIMARY KEY (`Id`), KEY `Heim` (`Heim`), KEY `Aus` (`Aus`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-    sql[4]  = "CREATE TABLE IF NOT EXISTS `spielt_fuer` ( `SId` int(11) NOT NULL, `VId` int(11) NOT NULL, `Saison` date NOT NULL, `Tore` int(11) NOT NULL, `TrikotNr` int(11) NOT NULL, PRIMARY KEY (`SId`,`VId`), KEY `VereinKey` (`VId`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-    sql[5]  = "CREATE TABLE IF NOT EXISTS `spielt_in` ( `LId` int(11) NOT NULL, `VId` int(11) NOT NULL, `Saison` date NOT NULL, PRIMARY KEY (`LId`,`VId`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+    sql[4]  = "CREATE TABLE IF NOT EXISTS `Spielt_fuer` ( `SId` int(11) NOT NULL, `VId` int(11) NOT NULL, `Saison` int(11) NOT NULL, `Tore` int(11) NOT NULL, `TrikotNr` int(11) NOT NULL, PRIMARY KEY (`SId`,`VId`), KEY `VereinKey` (`VId`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+    sql[5]  = "CREATE TABLE IF NOT EXISTS `Spielt_in` ( `LId` int(1) NOT NULL, `VId` int(11) NOT NULL, `Saison` int(11) NOT NULL, PRIMARY KEY (`LId`,`VId`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 
     alt[0] = "";
     alt[1] = "";
     alt[2] = "";
     alt[3] = "ALTER TABLE `Spiel` ADD CONSTRAINT `AusKey` FOREIGN KEY (`Aus`) REFERENCES `Verein` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION, ADD CONSTRAINT `HeimKey` FOREIGN KEY (`Heim`) REFERENCES `Verein` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;";
-    alt[4] = "ALTER TABLE `spielt_fuer` ADD CONSTRAINT `VereinKey` FOREIGN KEY (`VId`) REFERENCES `Verein` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION, ADD CONSTRAINT `SpielerKey` FOREIGN KEY (`SId`) REFERENCES `Spieler` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;";
-    alt[5] = "ALTER TABLE `spielt_in` ADD CONSTRAINT `VerKey` FOREIGN KEY (`VId`) REFERENCES `Verein` (`Id`), ADD CONSTRAINT `LigaKey` FOREIGN KEY (`LId`) REFERENCES `Liga` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;";
+    alt[4] = "ALTER TABLE `Spielt_fuer` ADD CONSTRAINT `VereinKey` FOREIGN KEY (`VId`) REFERENCES `Verein` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION, ADD CONSTRAINT `SpielerKey` FOREIGN KEY (`SId`) REFERENCES `Spieler` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;";
+    alt[5] = "ALTER TABLE `Spielt_in` ADD CONSTRAINT `VerKey` FOREIGN KEY (`VId`) REFERENCES `Verein` (`Id`), ADD CONSTRAINT `LigaKey` FOREIGN KEY (`LId`) REFERENCES `Liga` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;";
     
     for ( int i=0; i<6; i++ ) {
       try {
@@ -207,22 +207,100 @@ public class BL {
     dbs.dropTables();
     dbs.createTables();
     
-    Statement stmt = dbs.conn_src.createStatement();
-    ResultSet rset1 = dbs.cr_rs(stmt, "SELECT * FROM Liga;");
-
-    while (rset1.next()) {
-      System.out.print(rset1.getInt(Liga.NR.ordinal()) + ", ");
-      System.out.print(rset1.getString(Liga.VERB.ordinal()) + ", ");
-      //System.out.print(rset1.getDate(Liga.ERST.ordinal()) + ", ");
-      System.out.print(rset1.getInt(Liga.MEISTER.ordinal()) + ", ");
-      //System.out.print(rset1.getString(Liga.REKORDSP.ordinal()) + ", ");
-      System.out.println(rset1.getInt(Liga.SPIELE_REK.ordinal()));
+    Statement stmt_src = dbs.conn_src.createStatement();
+    Statement stmt_dst = dbs.conn_dst.createStatement();
+    
+    System.out.print("Fill table Liga...");
+    ResultSet rset_src = dbs.cr_rs(stmt_src, "SELECT * FROM Liga;");
+    while (rset_src.next()) {
+      String sql = "INSERT INTO Liga ";
+             sql+= "VALUES ( '"+rset_src.getInt   (1)+"'";
+             sql+= ", '"       +rset_src.getString(2)+"'";
+             sql+= " )";
+      stmt_dst.executeUpdate(sql);
     }
+    System.out.println("done.");
+    
+    System.out.print("Fill table Verein...");
+    rset_src = dbs.cr_rs(stmt_src, "SELECT * FROM Verein;");
+    while (rset_src.next()) {
+      String sql = "INSERT INTO Verein ";
+             sql+= "VALUES ( '"+rset_src.getInt   (1)+"'";
+             sql+= ", '"       +rset_src.getString(2)+"'";
+             sql+= " )";
+      stmt_dst.executeUpdate(sql);
+    }
+    System.out.println("done.");
+    
+    System.out.print("Fill table Spieler...");
+    rset_src = dbs.cr_rs(stmt_src, "SELECT * FROM Spieler;");
+    while (rset_src.next()) {
+      String sql = "INSERT INTO Spieler ";
+             sql+= "VALUES ( '"+rset_src.getInt   (1)+"'";
+             sql+= ", '"       +rset_src.getString(4)+"'";
+             sql+= ", '"       +rset_src.getInt   (3)+"'";
+             sql+= ", '"       +rset_src.getString(5)+"'";
+             sql+= " )";
+      stmt_dst.executeUpdate(sql);
+    }
+    System.out.println("done.");
+    
+    System.out.print("Fill table Spiel...");
+    rset_src = dbs.cr_rs(stmt_src, "SELECT * FROM Spiel;");
+    while (rset_src.next()) {
+      String sql = "INSERT INTO Spiel ";
+             sql+= "VALUES ( '"+rset_src.getInt   (1)+"'";
+             sql+= ", '"       +rset_src.getInt   (2)+"'";
+             sql+= ", '"       +rset_src.getDate  (3)+"'";
+             sql+= ", '"       +rset_src.getTime  (4)+"'";
+             sql+= ", '"       +rset_src.getInt   (7)+"'";
+             sql+= ", '"       +rset_src.getInt   (8)+"'";
+             sql+= ", '"       +rset_src.getInt   (5)+"'";
+             sql+= ", '"       +rset_src.getInt   (6)+"'";
+             sql+= " )";
+      //System.out.println(sql);
+      stmt_dst.executeUpdate(sql);
+    }
+    System.out.println("done.");
+    
+    System.out.print("Fill table Spielt_fuer...");
+    String query = "Select * ";
+           query += "From Spieler, Verein ";
+           query += "Where Spieler.Vereins_ID = Verein.V_ID;";
+    rset_src = dbs.cr_rs(stmt_src, query );
+    while (rset_src.next()) {
+      String sql = "INSERT INTO Spielt_fuer ";
+             sql+= "VALUES ( '"+rset_src.getInt   (1)+"'";
+             sql+= ", '"       +rset_src.getInt   (2)+"'";
+             sql+= ", '51'";
+             sql+= ", '"       +rset_src.getInt   (7)+"'";
+             sql+= ", '"       +rset_src.getInt   (3)+"'";
+             sql+= " )";
+      //System.out.println(sql);
+      stmt_dst.executeUpdate(sql);
+    }
+    System.out.println("done.");
+    
+    System.out.print("Fill table Spielt_in...");
+    query =  "Select Liga_Nr, V_ID ";
+    query += "From Liga, Verein ";
+    //System.out.println(query);
+    rset_src = dbs.cr_rs(stmt_src, query );
+    while (rset_src.next()) {
+      String sql = "INSERT INTO Spielt_in ";
+             sql+= "VALUES ( '"+rset_src.getInt   (1)+"'";
+             sql+= ", '"       +rset_src.getInt   (2)+"'";
+             sql+= ", '51'";
+             sql+= " )";
+      //System.out.println(sql);
+      stmt_dst.executeUpdate(sql);
+    }
+    System.out.println("done.");
+    
+    dbs.close_rs(rset_src);
+    dbs.close_st(stmt_src);
 
-    dbs.close_rs(rset1);
-    dbs.close_st(stmt);
 
-
-
+    
   }
 }
