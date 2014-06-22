@@ -15,7 +15,7 @@ import java.io.IOException;
 public class Classifier {
   public Connection conn;
   public Data       d;
-//  int[][]           lf1;
+
   int[]             aErg;
   int[]             aSpt;
   int[]             aT3s;
@@ -115,7 +115,7 @@ public class Classifier {
     Statement stmt1 = this.conn.createStatement();
     String sql1 = "SELECT Verein.Name FROM Verein ";
     sql1 += "WHERE Verein.Id=" + vid;
-    System.out.println(sql1);
+    //System.out.println(sql1);
     ResultSet rset1 = stmt1.executeQuery(sql1);
     
     String name="";
@@ -191,7 +191,7 @@ public class Classifier {
         output += "ToreHeim: " + toreHeim          + ", "; // Spiel.ToreHeim
         output += "ToreAus: "  + toreAus; // Spiel.ToreAus
         
-        System.out.println(output);
+        //System.out.println(output);
 
         int erg  = 0;
         int t1s  = 0;
@@ -262,7 +262,7 @@ public class Classifier {
         output += " GT3S : "      + aGt3s[i];
         output += " N5S : "       + aN5s[i];
         output += " D5S : "       + aTD5s[i];
-        System.out.println(output);
+        //System.out.println(output);
 
         if (aSpt[i] != 0) {
           content += aT3s [i] + ", "; // T3Sp
@@ -284,10 +284,10 @@ public class Classifier {
   public static void main(String[] args) {
     Classifier csf = new Classifier();
     csf.init();
-    
-    int vid = 1;
-    csf.writeArrf(vid);
-    
+    //int vid = 1;
+    for (int vid=1; vid<=56; vid++ ) {
+      csf.writeArrf(vid);
+    }
     csf.deinit();
   }
 
