@@ -15,7 +15,16 @@ import java.io.IOException;
 public class Classifier {
   public Connection conn;
   public Data       d;
-  int[][]           lf1;
+//  int[][]           lf1;
+  int[]             aErg;
+  int[]             aSpt;
+  int[]             aT3s;
+  int[]             aT1s;
+  int[]             aGt3s;
+  int[]             aGt1s;
+  int[]             aN5s;
+  int[]             aN1s;
+  double[]          aD5s;
   
   public static int N   = 64;
   public static int X   = 10;
@@ -27,10 +36,20 @@ public class Classifier {
     conn = null;
     d    = new Data();
     
-    lf1 = new int[N][];
-    for (int i = 0; i < N; i++) {
-      lf1[i] = new int[X];
-    }
+//    lf1 = new int[N][];
+//    for (int i = 0; i < N; i++) {
+//      lf1[i] = new int[X];
+//    }
+    
+    aErg  = new int[N];
+    aSpt  = new int[N];
+    aT3s  = new int[N];
+    aT1s  = new int[N];
+    aGt3s = new int[N];
+    aGt1s = new int[N];
+    aN5s  = new int[N];
+    aN1s  = new int[N];
+    aD5s  = new double[N];
   }
   
   public void init() {
@@ -123,7 +142,7 @@ public class Classifier {
       bw.write(content);
       bw.close();
 
-      System.out.println("Done");
+      System.out.println("Writing File "+ name+".arff ...done");
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -150,6 +169,7 @@ public class Classifier {
       content += "@attribute T3S numeric\n";
       content += "@attribute GT3S numeric\n";
       content += "@attribute N5S numeric\n";
+      content += "@attribute D5S numeric\n";
       content += "@attribute ergebnis {-1, 0, 1}\n";
       content += "\n\n@data\n";
 
@@ -171,82 +191,85 @@ public class Classifier {
         output += "ToreHeim: " + toreHeim          + ", "; // Spiel.ToreHeim
         output += "ToreAus: "  + toreAus; // Spiel.ToreAus
         
-
         System.out.println(output);
-        int[] tmp = new int[X];
 
-        tmp[0] = spielTag; // Spiel.Spieltag
-        tmp[1] = vereinId; // Verein.Id
-        
-        
-        // tmp[2] Ergebnis
-        // tmp[3] Anzahl der Tore pro Spieltag
-        // tmp[4] Anzahl der Gegentore pro Spieltag
-        // tmp[5] Niederlange am Spieltag
+        int erg  = 0;
+        int t1s  = 0;
+        int gt1s = 0;
+        int n1s  = 0;
         
         if (vereinId == heimId) {
-          tmp[3] = toreHeim; // Spiel.ToreHeim
-          tmp[4] = toreAus;
+          t1s  = toreHeim; // Spiel.ToreHeim
+          gt1s = toreAus;
           if (toreHeim > toreAus) {
-            tmp[2] = 1;
-            tmp[5] = 0;
+            erg = 1;
+            n1s = 0;
           }
           else if (toreAus > toreHeim) {
-            tmp[2] = -1;
-            tmp[5] = 1;
+            erg = -1;
+            n1s = 1;
           }
           else {
-            tmp[2] = 0;
-            tmp[5] = 0;
+            erg = 0;
+            n1s = 0;
           }
         } else if (vereinId == ausId) {
-          tmp[3] = toreAus; // Spiel.ToreAus
-          tmp[4] = toreHeim;
+          t1s  = toreAus; // Spiel.ToreAus
+          gt1s = toreHeim;
           if (toreAus > toreHeim) {
-            tmp[2] = 1;
-            tmp[5] = 0;
+            erg = 1;
+            n1s = 0;
           }
           else if (toreHeim > toreAus) {
-            tmp[2] = -1;
-            tmp[5] = 1;
+            erg = -1;
+            n1s = 1;
           }
           else {
-            tmp[2] = 0;
-            tmp[5] = 0;
+            erg = 0;
+            n1s = 0;
           }
         }
-
-        lf1[spielTag + OFF][0] = tmp[0]; // Spieltag
-        lf1[spielTag + OFF][1] = tmp[2]; // ergebnis
-        lf1[spielTag + OFF][2] = tmp[3]; // Tore pro Spieltag
-        //lf1[spielTag + OFF][3] = Tore letzte drei Spiele
-        lf1[spielTag + OFF][4] = tmp[4]; // Gegentore pro Spieltag
-        // lf1[spielTag + OFF][5] = Gegentore letzte drei Spiele
-        lf1[spielTag + OFF][6] = tmp[5]; // Niederlage am Spieltag
-        // lf1spielTag + OFF][7] = Anzahl Niederlagen in den letzten fünf Spielen
+        
+        aSpt [spielTag + OFF] = spielTag;
+        aErg [spielTag + OFF] = erg;
+        aT1s [spielTag + OFF] = t1s;
+        aGt1s[spielTag + OFF] = gt1s;
+        aN1s [spielTag + OFF] = n1s;
+        
       }
 
       int start = OFF + 1;
 
       for (int i = start; i < N; i++) {
-        // Anzahl der Tore in den letzten drei Spielen
-        lf1[i][3] = lf1[i - 1][2] + lf1[i - 2][2] + lf1[i - 3][2];
-        // Anzahl der Gegentore in den letzten drei Spielen
-        lf1[i][5] = lf1[i - 1][4] + lf1[i - 2][4] + lf1[i - 3][4];
-        lf1[i][7] = 0;
+        aT3s [i] = aT1s [i-1] + aT1s [i-2] + aT1s [i-3];
+        aGt3s[i] = aGt1s[i-1] + aGt1s[i-2] + aGt1s[i-3];
+
+        aN5s[i]  = 0;
         for ( int j=1; j<=5; j++) {
-          lf1[i][7] += lf1[i-j][6];
+          aN5s[i] += aN1s[i-j];
         }
-        String output = " Erg : " + lf1[i][1];
-        output += " T3S : "       + lf1[i][3];
-        output += " GT3S : "      + lf1[i][5];
-        output += " N5S : "       + lf1[i][7];
+        
+        aD5s[i] = 0.0;
+        for ( int j=1; j<=5; j++ ) {
+          aD5s[i] += aT1s[i-j] - aT1s[i-j-1];
+          //System.out.println( aSpt[i-j] +" "+ aSpt[i-j-1] );
+        }
+        aD5s[i] /= 5;
+
+        String output = "Tag: " + aSpt[i];
+        output += " Erg : " + aErg[i];
+        output += " T3S : "       + aT3s[i];
+        output += " GT3S : "      + aGt3s[i];
+        output += " N5S : "       + aN5s[i];
+        output += " D5S : "       + aD5s[i];
         System.out.println(output);
-        if (lf1[i][0] != 0) {
-          content += lf1[i][3] + ", "; // T3Sp
-          content += lf1[i][5] + ", "; // T3Sp
-          content += lf1[i][7] + ", "; // N5S
-          content += lf1[i][1] + "\n"; // erg
+
+        if (aSpt[i] != 0) {
+          content += aT3s [i] + ", "; // T3Sp
+          content += aGt3s[i] + ", "; // T3Sp
+          content += aN5s [i] + ", "; // N5S
+          content += aD5s [i] + ", "; // D5S
+          content += aErg [i] + "\n"; // erg
         }
       }
 
