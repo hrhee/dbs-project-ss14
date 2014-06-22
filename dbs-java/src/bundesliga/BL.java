@@ -74,7 +74,7 @@ public class BL {
   }
 
   public void init_dst() {
-    System.out.println("Create Database "+d.FU_DBS);
+    System.out.print("Create Database "+d.FU_DBS);
     try {
       conn_dst = DriverManager.getConnection(d.DB_URL, d.USR, d.PW);
 
@@ -106,6 +106,24 @@ public class BL {
         return;
       }
     }
+    
+    connect(d.FU_DBS);
+  }
+  
+  public void deinit() throws SQLException {
+    Boolean b = false; 
+    if ( this.conn_src != null ) {
+      this.conn_src.close();
+      b = true;
+    }
+    if ( this.conn_dst != null ) {
+      this.conn_dst.close();
+      b = true;
+    } else {
+      b = false;
+    }
+    
+    if ( b ) System.out.println("All connections closed.");
   }
 
   public ResultSet cr_rs(Statement stmt, String sql) throws SQLException {
@@ -134,17 +152,24 @@ public class BL {
       e.printStackTrace();
       return;
     }
+    
+    if (conn_dst != null) {
+      System.out
+          .println("Connection to database " + s + " established");
+    } else {
+      System.out.println("Failed to make connection!");
+    }
 
   }
   
-  public void dropTables() {
+  public void dropTables_dst() {
     for ( int i=5; i>=0; i-- ) {
       try {
         Statement stmt = conn_dst.createStatement();
-        String s = "DROP TABLE IF EXISTS " + tableName[i];
-        System.out.println(s);
-        stmt.executeUpdate( "DROP TABLE IF EXISTS " + tableName[i] );
-        System.out.println("Table '"+tableName[i]+"' dropped.");
+        String sql = "DROP TABLE IF EXISTS " + tableName[i];
+        System.out.print("Drop Table '"+tableName[i]+"'");
+        stmt.executeUpdate( sql );
+        System.out.println("...done.");
         this.close_st(stmt);
       } catch (SQLException e) {
         System.out.println("Warning: Could not drop table");
@@ -154,7 +179,7 @@ public class BL {
     }
   }
   
-  public void createTables() {
+  public void createTables_dst() {
     String [] sql  = new String[6];
     String [] alt  = new String[6];
     sql[0]  = "CREATE TABLE IF NOT EXISTS `Liga` (`Id` int(1) NOT NULL, `Name` varchar(40) COLLATE utf8_unicode_ci NOT NULL, PRIMARY KEY (`Id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
@@ -175,7 +200,8 @@ public class BL {
       try {
         Statement stmt = conn_dst.createStatement();
         stmt.executeUpdate(sql[i]);
-        System.out.println("Table '"+tableName[i]+"' created.");
+        System.out.print("Create Table '"+tableName[i]+"'");
+        System.out.println("...done.");
         this.close_st(stmt);
       } catch (SQLException e) {
         System.out.println("Warning: Could not create table");
@@ -186,8 +212,9 @@ public class BL {
       if ( alt[i].length() != 0 ) {
         try {
           Statement stmt = conn_dst.createStatement();
+          System.out.print("Alter Table '"+tableName[i]+"'");
           stmt.executeUpdate(alt[i]);
-          System.out.println("Table '"+tableName[i]+"' altered.");
+          System.out.println("...done.");
           this.close_st(stmt);
         } catch (SQLException e) {
           System.out.println("Warning: Could not create table");
@@ -198,20 +225,12 @@ public class BL {
     }
   }
 
-  public static void main(String[] args) throws SQLException {
-    BL dbs = new BL();
-
-    dbs.init_src();
-    dbs.init_dst();
-    dbs.connect(dbs.d.FU_DBS);
-    dbs.dropTables();
-    dbs.createTables();
+  public void fillTables_dst() throws SQLException {
+    Statement stmt_src = this.conn_src.createStatement();
+    Statement stmt_dst = this.conn_dst.createStatement();
     
-    Statement stmt_src = dbs.conn_src.createStatement();
-    Statement stmt_dst = dbs.conn_dst.createStatement();
-    
-    System.out.print("Fill table Liga...");
-    ResultSet rset_src = dbs.cr_rs(stmt_src, "SELECT * FROM Liga;");
+    System.out.print("Fill Table Liga...");
+    ResultSet rset_src = this.cr_rs(stmt_src, "SELECT * FROM Liga;");
     while (rset_src.next()) {
       String sql = "INSERT INTO Liga ";
              sql+= "VALUES ( '"+rset_src.getInt   (1)+"'";
@@ -221,8 +240,8 @@ public class BL {
     }
     System.out.println("done.");
     
-    System.out.print("Fill table Verein...");
-    rset_src = dbs.cr_rs(stmt_src, "SELECT * FROM Verein;");
+    System.out.print("Fill Table Verein...");
+    rset_src = this.cr_rs(stmt_src, "SELECT * FROM Verein;");
     while (rset_src.next()) {
       String sql = "INSERT INTO Verein ";
              sql+= "VALUES ( '"+rset_src.getInt   (1)+"'";
@@ -232,8 +251,8 @@ public class BL {
     }
     System.out.println("done.");
     
-    System.out.print("Fill table Spieler...");
-    rset_src = dbs.cr_rs(stmt_src, "SELECT * FROM Spieler;");
+    System.out.print("Fill Table Spieler...");
+    rset_src = this.cr_rs(stmt_src, "SELECT * FROM Spieler;");
     while (rset_src.next()) {
       String sql = "INSERT INTO Spieler ";
              sql+= "VALUES ( '"+rset_src.getInt   (1)+"'";
@@ -245,8 +264,8 @@ public class BL {
     }
     System.out.println("done.");
     
-    System.out.print("Fill table Spiel...");
-    rset_src = dbs.cr_rs(stmt_src, "SELECT * FROM Spiel;");
+    System.out.print("Fill Table Spiel...");
+    rset_src = this.cr_rs(stmt_src, "SELECT * FROM Spiel;");
     while (rset_src.next()) {
       String sql = "INSERT INTO Spiel ";
              sql+= "VALUES ( '"+rset_src.getInt   (1)+"'";
@@ -263,11 +282,11 @@ public class BL {
     }
     System.out.println("done.");
     
-    System.out.print("Fill table Spielt_fuer...");
+    System.out.print("Fill Table Spielt_fuer...");
     String query = "Select * ";
            query += "From Spieler, Verein ";
            query += "Where Spieler.Vereins_ID = Verein.V_ID;";
-    rset_src = dbs.cr_rs(stmt_src, query );
+    rset_src = this.cr_rs(stmt_src, query );
     while (rset_src.next()) {
       String sql = "INSERT INTO Spielt_fuer ";
              sql+= "VALUES ( '"+rset_src.getInt   (1)+"'";
@@ -281,11 +300,11 @@ public class BL {
     }
     System.out.println("done.");
     
-    System.out.print("Fill table Spielt_in...");
+    System.out.print("Fill Table Spielt_in...");
     query =  "Select Liga_Nr, V_ID ";
     query += "From Liga, Verein ";
     //System.out.println(query);
-    rset_src = dbs.cr_rs(stmt_src, query );
+    rset_src = this.cr_rs(stmt_src, query );
     while (rset_src.next()) {
       String sql = "INSERT INTO Spielt_in ";
              sql+= "VALUES ( '"+rset_src.getInt   (1)+"'";
@@ -297,10 +316,21 @@ public class BL {
     }
     System.out.println("done.");
     
-    dbs.close_rs(rset_src);
-    dbs.close_st(stmt_src);
+    this.close_rs(rset_src);
+    this.close_st(stmt_src);
+    this.close_st(stmt_dst);
+  }
+  
+  public static void main(String[] args) throws SQLException {
+    BL dbs = new BL();
 
+    dbs.init_src();
+    dbs.init_dst();
 
+    dbs.dropTables_dst();
+    dbs.createTables_dst();
+    dbs.fillTables_dst();
     
+    dbs.deinit();
   }
 }
