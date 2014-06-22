@@ -16,31 +16,24 @@ public class Classifier {
   public Connection conn;
   public Data       d;
 
-  int[]             aErg;
-  int[]             aSpt;
-  int[]             aT3s;
-  int[]             aT1s;
-  int[]             aGt3s;
-  int[]             aGt1s;
-  int[]             aN5s;
-  int[]             aN1s;
-  double[]          aTD5s;
+  int[]    aErg;
+  int[]    aSpt;
+  int[]    aT3s;
+  int[]    aT1s;
+  int[]    aGt3s;
+  int[]    aGt1s;
+  int[]    aN5s;
+  int[]    aN1s;
+  double[] aTD5s;
   
   public static int N   = 64;
-  public static int X   = 10;
   public static int OFF = 10;
-  public static int MAX = 34;
+
 
   
   public Classifier() {
-    conn = null;
-    d    = new Data();
-    
-//    lf1 = new int[N][];
-//    for (int i = 0; i < N; i++) {
-//      lf1[i] = new int[X];
-//    }
-    
+    conn  = null;
+    d     = new Data();
     aErg  = new int[N];
     aSpt  = new int[N];
     aT3s  = new int[N];
@@ -49,7 +42,7 @@ public class Classifier {
     aGt1s = new int[N];
     aN5s  = new int[N];
     aN1s  = new int[N];
-    aTD5s  = new double[N];
+    aTD5s = new double[N];
   }
   
   public void init() {
@@ -257,19 +250,19 @@ public class Classifier {
         aTD5s[i] /= 5;
 
         String output = "Tag: " + aSpt[i];
-        output += " Erg : " + aErg[i];
-        output += " T3S : "       + aT3s[i];
-        output += " GT3S : "      + aGt3s[i];
-        output += " N5S : "       + aN5s[i];
-        output += " D5S : "       + aTD5s[i];
+        output += " Erg : "     + aErg[i];
+        output += " T3S : "     + aT3s[i];
+        output += " GT3S : "    + aGt3s[i];
+        output += " N5S : "     + aN5s[i];
+        output += " D5S : "     + aTD5s[i];
         //System.out.println(output);
 
         if (aSpt[i] != 0) {
-          content += aT3s [i] + ", "; // T3Sp
-          content += aGt3s[i] + ", "; // T3Sp
-          content += aN5s [i] + ", "; // N5S
+          content += aT3s  [i] + ", "; // T3Sp
+          content += aGt3s [i] + ", "; // T3Sp
+          content += aN5s  [i] + ", "; // N5S
           content += aTD5s [i] + ", "; // D5S
-          content += aErg [i] + "\n"; // erg
+          content += aErg  [i] + "\n"; // erg
         }
       }
 
