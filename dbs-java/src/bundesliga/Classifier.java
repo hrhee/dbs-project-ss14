@@ -24,7 +24,7 @@ public class Classifier {
   int[]             aGt1s;
   int[]             aN5s;
   int[]             aN1s;
-  double[]          aD5s;
+  double[]          aTD5s;
   
   public static int N   = 64;
   public static int X   = 10;
@@ -49,7 +49,7 @@ public class Classifier {
     aGt1s = new int[N];
     aN5s  = new int[N];
     aN1s  = new int[N];
-    aD5s  = new double[N];
+    aTD5s  = new double[N];
   }
   
   public void init() {
@@ -249,26 +249,26 @@ public class Classifier {
           aN5s[i] += aN1s[i-j];
         }
         
-        aD5s[i] = 0.0;
+        aTD5s[i] = 0.0;
         for ( int j=1; j<=5; j++ ) {
-          aD5s[i] += aT1s[i-j] - aT1s[i-j-1];
+          aTD5s[i] += aT1s[i-j] - aT1s[i-j-1];
           //System.out.println( aSpt[i-j] +" "+ aSpt[i-j-1] );
         }
-        aD5s[i] /= 5;
+        aTD5s[i] /= 5;
 
         String output = "Tag: " + aSpt[i];
         output += " Erg : " + aErg[i];
         output += " T3S : "       + aT3s[i];
         output += " GT3S : "      + aGt3s[i];
         output += " N5S : "       + aN5s[i];
-        output += " D5S : "       + aD5s[i];
+        output += " D5S : "       + aTD5s[i];
         System.out.println(output);
 
         if (aSpt[i] != 0) {
           content += aT3s [i] + ", "; // T3Sp
           content += aGt3s[i] + ", "; // T3Sp
           content += aN5s [i] + ", "; // N5S
-          content += aD5s [i] + ", "; // D5S
+          content += aTD5s [i] + ", "; // D5S
           content += aErg [i] + "\n"; // erg
         }
       }
