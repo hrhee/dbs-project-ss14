@@ -291,21 +291,22 @@ public class Classifier {
     }
   }
   
-  public void writeArrf(int vid) {
-    String name    = "";
-    String content = "";
-    try {
-      name = this.getName(vid);
-      this.calcFeatures( vid );
-    } catch (SQLException e) {
-      e.printStackTrace();
-      return;
+  public void writeArrf() {
+    for (int vid=1; vid<=NV; vid++ ) {
+      String name    = "";
+      String content = "";
+      try {
+        name = this.getName(vid);
+        this.calcFeatures( vid );
+      } catch (SQLException e) {
+        e.printStackTrace();
+        return;
+      }
+      
+      content += this.writeHead(name, content);
+      content += this.writeData();
+      this.writeToFile( name, content );
     }
-    
-    content += this.writeHead(name, content);
-    content += this.writeData();
-    this.writeToFile( name, content );
-    
     return;
   }
   
@@ -325,11 +326,8 @@ public class Classifier {
   public static void main(String[] args) {
     Classifier csf = new Classifier();
     csf.init();
-    
-    for (int vid=1; vid<=NV; vid++ ) {
-      csf.writeArrf(vid);
-    }
-    
+
+    csf.writeArrf();
     csf.writeArrf("all");
     
     csf.deinit();
