@@ -185,9 +185,8 @@ public class Classifier {
     return arrf;
   }
   
-  public void calcFeatures(int vid, String name) {
+  public void calcFeatures(int vid) {
     try {
-      //String name = getName(vid);
       Statement stmt = this.conn.createStatement();
       String sql = "Select Spiel.Spieltag, Verein.Id, Verein.Name, ";
       sql += "Spiel.Heim, Spiel.Aus, Spiel.ToreHeim, Spiel.ToreAus ";
@@ -199,8 +198,6 @@ public class Classifier {
       sql += "ORDER BY Spiel.Spieltag ";
 
       ResultSet rset = stmt.executeQuery(sql);
-
-      
 
       while (rset.next()) {
         int spielTag = rset.getInt(1);
@@ -294,11 +291,11 @@ public class Classifier {
   }
   
   public void writeArrf(int vid) {
-    String name = "";
+    String name    = "";
     String content = "";
     try {
       name = this.getName(vid);
-      this.calcFeatures( vid, name );
+      this.calcFeatures( vid );
     } catch (SQLException e) {
       e.printStackTrace();
       return;
@@ -311,6 +308,19 @@ public class Classifier {
     return;
   }
   
+  public void writeArrf(String name) {
+    
+    String content = "";
+    content += this.writeHead(name, content);
+    for ( int vid=0; vid<=56; vid++ ) {
+      this.calcFeatures( vid );
+      content += this.writeData();
+    }
+    this.writeToFile( name, content );
+    
+    return;
+  }
+  
   public static void main(String[] args) {
     Classifier csf = new Classifier();
     csf.init();
@@ -318,6 +328,8 @@ public class Classifier {
     for (int vid=1; vid<=56; vid++ ) {
       csf.writeArrf(vid);
     }
+    
+    csf.writeArrf("all");
     
     csf.deinit();
   }
