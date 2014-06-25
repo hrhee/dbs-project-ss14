@@ -13,22 +13,6 @@ public class BL {
   public Data       d;
   public String [] tableName;
 
-  public enum Liga {
-    NULL, NR, VERB, ERST, MEISTER, REKORDSP, SPIELE_REK
-  }
-  
-  public enum Spiel {
-    NULL, ID, TAG, DATE, UHR, HEIM, GAST, TH, TG
-  }
-  
-  public enum Spieler {
-    SID, VID, TNR, SNAME, LAND, SP, T, VOR
-  }
-  
-  public enum Verein {
-    VID, NAME, L
-  }
-
   public BL() {
     conn_src  = null;
     conn_dst  = null;
@@ -53,8 +37,6 @@ public class BL {
       e.printStackTrace();
       return;
     }
-
-    // System.out.println("MySQL JDBC Driver Registered!");
 
     try {
       conn_src = DriverManager.getConnection(d.DB_URL + d.DB_NAME, d.USR, d.PW);
@@ -107,7 +89,7 @@ public class BL {
       }
     }
     
-    connect(d.FU_DBS);
+    connect_dst(d.FU_DBS);
   }
   
   public void deinit() throws SQLException {
@@ -143,7 +125,7 @@ public class BL {
     }
   }
   
-  public void connect( String s) {
+  public void connect_dst( String s) {
     try {
       conn_dst = DriverManager.getConnection(d.DB_URL + s, d.USR, d.PW);
 
