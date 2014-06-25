@@ -16,19 +16,19 @@ public class Classifier {
   public Connection conn;
   public Data       d;
 
-  int[]     aErg;
-  int[]     aSpt;
-  int[]     aT3s;
-  int[]     aT1s;
-  int[]     aGt3s;
-  int[]     aGt1s;
-  int[]     aN5s;
-  int[]     aN1s;
-  double[]  aTD5s;
-  boolean[] aHeim;
-  int[]     aHt1s;
-  int[]     aHt3s;
-  int[]     aE1s;
+  public int[]     aErg;
+  public int[]     aSpt;
+  public int[]     aT3s;
+  public int[]     aT1s;
+  public int[]     aGt3s;
+  public int[]     aGt1s;
+  public int[]     aN5s;
+  public int[]     aN1s;
+  public double[]  aTD5s;
+  public boolean[] aHeim;
+  public int[]     aHt1s;
+  public int[]     aHt3s;
+  public int[]     aE1s;
   
   public static int N   = 64;
   public static int OFF = 10;
@@ -131,7 +131,7 @@ public class Classifier {
     return name;
   }
   
-  public void writeContent( String name, String content ) {
+  public void writeToFile( String name, String content ) {
     try {
       File file = new File("./result/" + name + ".arff");
 
@@ -151,9 +151,43 @@ public class Classifier {
     }
   }
   
-  public void writeArrf(int vid) {
+  public String writeHead(  String name, String arff ) {
+    
+    arff += "@relation " + name + "\n";
+    arff += "\n";
+    arff += "@attribute T3S  numeric\n";
+    arff += "@attribute GT3S numeric\n";
+    arff += "@attribute N5S  numeric\n";
+    arff += "@attribute D5S  numeric\n";
+    arff += "@attribute Heim {true, false}\n";
+    arff += "@attribute Ht3s numeric\n";
+    arff += "@attribute E1s  numeric\n";
+    arff += "@attribute ergebnis {-1, 0, 1}\n";
+    arff += "\n\n@data\n";
+    return arff;
+  }
+  
+  public String writeData() {
+    String arrf = "";
+    int start = OFF+1;
+    for (int i = start; i < N; i++) {
+      if (aSpt[i] != 0) {
+        arrf += aT3s  [i] + ", "; // T3s
+        arrf += aGt3s [i] + ", "; // Gt3s
+        arrf += aN5s  [i] + ", "; // N5s
+        arrf += aTD5s [i] + ", "; // D5s
+        arrf += aHeim [i] + ", "; // D5s
+        arrf += aHt3s [i] + ", "; // Ht3s
+        arrf += aE1s  [i] + ", "; // E1s
+        arrf += aErg  [i] + "\n"; // erg
+      }
+    }
+    return arrf;
+  }
+  
+  public void calcFeatures(int vid, String name) {
     try {
-      String name = getName(vid);
+      //String name = getName(vid);
       Statement stmt = this.conn.createStatement();
       String sql = "Select Spiel.Spieltag, Verein.Id, Verein.Name, ";
       sql += "Spiel.Heim, Spiel.Aus, Spiel.ToreHeim, Spiel.ToreAus ";
@@ -166,17 +200,7 @@ public class Classifier {
 
       ResultSet rset = stmt.executeQuery(sql);
 
-      String content = "@relation " + name + "\n";
-      content += "\n";
-      content += "@attribute T3S  numeric\n";
-      content += "@attribute GT3S numeric\n";
-      content += "@attribute N5S  numeric\n";
-      content += "@attribute D5S  numeric\n";
-      content += "@attribute Heim {true, false}\n";
-      content += "@attribute Ht3s numeric\n";
-      content += "@attribute E1s  numeric\n";
-      content += "@attribute ergebnis {-1, 0, 1}\n";
-      content += "\n\n@data\n";
+      
 
       while (rset.next()) {
         int spielTag = rset.getInt(1);
@@ -186,18 +210,6 @@ public class Classifier {
         int toreHeim = rset.getInt(6);
         int toreAus  = rset.getInt(7);
         
-        String output = "";
-
-        output += "Spieltag: " + spielTag          + ", "; // Spiel.Spieltag
-        output += "VId: "      + vereinId          + ", "; // Verein.Id
-        output += "VName: "    + rset.getString(3) + ", "; // Verein.Name
-        output += "HeimId: "   + heimId            + ", "; // Spiel.Heim
-        output += "AusId: "    + ausId             + ", "; // Spiel.Aus
-        output += "ToreHeim: " + toreHeim          + ", "; // Spiel.ToreHeim
-        output += "ToreAus: "  + toreAus; // Spiel.ToreAus
-        
-        //System.out.println(output);
-
         int     erg   = 0;
         int     t1s   = 0;
         int     gt1s  = 0;
@@ -251,7 +263,7 @@ public class Classifier {
       }
 
       int start = OFF + 1;
-
+     
       for (int i = start; i < N; i++) {
         aT3s [i] = aT1s [i-1] + aT1s [i-2] + aT1s [i-3];
         aGt3s[i] = aGt1s[i-1] + aGt1s[i-2] + aGt1s[i-3];
@@ -271,54 +283,42 @@ public class Classifier {
         aHt3s[i] = 0;
         for ( int j=1; j<=6; j++ ) {
           if (aHeim[i-j]) aHt3s[i] += aHt1s[i-j] - aHt1s[i-j-1];
-          //System.out.println( aSpt[i-j] +" "+ aSpt[i-j-1] );
         }
         
         aE1s[i] = aErg[i-1];
-
-        String output = "Tag: " + aSpt[i];
-        output += " Erg : "     + aErg[i];
-        output += " T3S : "     + aT3s[i];
-        output += " GT3S : "    + aGt3s[i];
-        output += " N5S : "     + aN5s[i];
-        output += " Heim : "    + aHeim[i];
-        output += " Ht3s : "    + aHt3s[i];
-        output += " E1s : "    +  aE1s[i];
-        
-        if ( aHeim[i] ) {
-          output += " Heim: TRUE";
-        } else {
-          output += " Heim: FALSE";
-        }
-        //System.out.println(output);
-
-        if (aSpt[i] != 0) {
-          content += aT3s  [i] + ", "; // T3s
-          content += aGt3s [i] + ", "; // Gt3s
-          content += aN5s  [i] + ", "; // N5s
-          content += aTD5s [i] + ", "; // D5s
-          content += aHeim [i] + ", "; // D5s
-          content += aHt3s [i] + ", "; // Ht3s
-          content += aE1s  [i] + ", "; // E1s
-          content += aErg  [i] + "\n"; // erg
-        }
-      }
-
-      this.writeContent( name, content );
-      
+      } 
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return;
+    }
+  }
+  
+  public void writeArrf(int vid) {
+    String name = "";
+    String content = "";
+    try {
+      name = this.getName(vid);
+      this.calcFeatures( vid, name );
     } catch (SQLException e) {
       e.printStackTrace();
       return;
     }
+    
+    content += this.writeHead(name, content);
+    content += this.writeData();
+    this.writeToFile( name, content );
+    
+    return;
   }
   
   public static void main(String[] args) {
     Classifier csf = new Classifier();
     csf.init();
-    //int vid = 1;
+    
     for (int vid=1; vid<=56; vid++ ) {
       csf.writeArrf(vid);
     }
+    
     csf.deinit();
   }
 
