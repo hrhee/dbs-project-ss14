@@ -16,15 +16,19 @@ public class Classifier {
   public Connection conn;
   public Data       d;
 
-  int[]    aErg;
-  int[]    aSpt;
-  int[]    aT3s;
-  int[]    aT1s;
-  int[]    aGt3s;
-  int[]    aGt1s;
-  int[]    aN5s;
-  int[]    aN1s;
-  double[] aTD5s;
+  int[]     aErg;
+  int[]     aSpt;
+  int[]     aT3s;
+  int[]     aT1s;
+  int[]     aGt3s;
+  int[]     aGt1s;
+  int[]     aN5s;
+  int[]     aN1s;
+  double[]  aTD5s;
+  boolean[] aHeim;
+  int[]     aHt1s;
+  int[]     aHt3s;
+  int[]     aE1s;
   
   public static int N   = 64;
   public static int OFF = 10;
@@ -43,6 +47,11 @@ public class Classifier {
     aN5s  = new int[N];
     aN1s  = new int[N];
     aTD5s = new double[N];
+    aHeim = new boolean[N];
+    aHt1s = new int[N];
+    aHt3s = new int[N];
+    aE1s  = new int[N];
+    
   }
   
   public void init() {
@@ -159,10 +168,13 @@ public class Classifier {
 
       String content = "@relation " + name + "\n";
       content += "\n";
-      content += "@attribute T3S numeric\n";
+      content += "@attribute T3S  numeric\n";
       content += "@attribute GT3S numeric\n";
-      content += "@attribute N5S numeric\n";
-      content += "@attribute D5S numeric\n";
+      content += "@attribute N5S  numeric\n";
+      content += "@attribute D5S  numeric\n";
+      content += "@attribute Heim {true, false}\n";
+      content += "@attribute Ht3s numeric\n";
+      content += "@attribute E1s  numeric\n";
       content += "@attribute ergebnis {-1, 0, 1}\n";
       content += "\n\n@data\n";
 
@@ -186,14 +198,18 @@ public class Classifier {
         
         //System.out.println(output);
 
-        int erg  = 0;
-        int t1s  = 0;
-        int gt1s = 0;
-        int n1s  = 0;
+        int     erg   = 0;
+        int     t1s   = 0;
+        int     gt1s  = 0;
+        int     n1s   = 0;
+        boolean bHeim = false;
+        int     ht1s  = 0;
         
         if (vereinId == heimId) {
-          t1s  = toreHeim; // Spiel.ToreHeim
-          gt1s = toreAus;
+          t1s   = toreHeim; // Spiel.ToreHeim
+          gt1s  = toreAus;
+          bHeim = true;
+          ht1s  = toreHeim;
           if (toreHeim > toreAus) {
             erg = 1;
             n1s = 0;
@@ -207,8 +223,10 @@ public class Classifier {
             n1s = 0;
           }
         } else if (vereinId == ausId) {
-          t1s  = toreAus; // Spiel.ToreAus
-          gt1s = toreHeim;
+          t1s   = toreAus; // Spiel.ToreAus
+          gt1s  = toreHeim;
+          bHeim = false;
+          ht1s  = 0;
           if (toreAus > toreHeim) {
             erg = 1;
             n1s = 0;
@@ -228,7 +246,8 @@ public class Classifier {
         aT1s [spielTag + OFF] = t1s;
         aGt1s[spielTag + OFF] = gt1s;
         aN1s [spielTag + OFF] = n1s;
-        
+        aHeim[spielTag + OFF] = bHeim;
+        aHt1s[spielTag + OFF] = ht1s;
       }
 
       int start = OFF + 1;
@@ -248,20 +267,39 @@ public class Classifier {
           //System.out.println( aSpt[i-j] +" "+ aSpt[i-j-1] );
         }
         aTD5s[i] /= 5;
+        
+        aHt3s[i] = 0;
+        for ( int j=1; j<=6; j++ ) {
+          if (aHeim[i-j]) aHt3s[i] += aHt1s[i-j] - aHt1s[i-j-1];
+          //System.out.println( aSpt[i-j] +" "+ aSpt[i-j-1] );
+        }
+        
+        aE1s[i] = aErg[i-1];
 
         String output = "Tag: " + aSpt[i];
         output += " Erg : "     + aErg[i];
         output += " T3S : "     + aT3s[i];
         output += " GT3S : "    + aGt3s[i];
         output += " N5S : "     + aN5s[i];
-        output += " D5S : "     + aTD5s[i];
+        output += " Heim : "    + aHeim[i];
+        output += " Ht3s : "    + aHt3s[i];
+        output += " E1s : "    +  aE1s[i];
+        
+        if ( aHeim[i] ) {
+          output += " Heim: TRUE";
+        } else {
+          output += " Heim: FALSE";
+        }
         //System.out.println(output);
 
         if (aSpt[i] != 0) {
-          content += aT3s  [i] + ", "; // T3Sp
-          content += aGt3s [i] + ", "; // T3Sp
-          content += aN5s  [i] + ", "; // N5S
-          content += aTD5s [i] + ", "; // D5S
+          content += aT3s  [i] + ", "; // T3s
+          content += aGt3s [i] + ", "; // Gt3s
+          content += aN5s  [i] + ", "; // N5s
+          content += aTD5s [i] + ", "; // D5s
+          content += aHeim [i] + ", "; // D5s
+          content += aHt3s [i] + ", "; // Ht3s
+          content += aE1s  [i] + ", "; // E1s
           content += aErg  [i] + "\n"; // erg
         }
       }
