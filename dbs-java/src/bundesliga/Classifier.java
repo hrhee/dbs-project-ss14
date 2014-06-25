@@ -32,6 +32,7 @@ public class Classifier {
   
   public static int N   = 64;
   public static int OFF = 10;
+  public static int NV  = 56;
 
 
   
@@ -133,7 +134,7 @@ public class Classifier {
   
   public void writeToFile( String name, String content ) {
     try {
-      File file = new File("./result/" + name + ".arff");
+      File file = new File( d.RES + name + ".arff");
 
       if (!file.exists()) {
         file.createNewFile();
@@ -312,7 +313,7 @@ public class Classifier {
     
     String content = "";
     content += this.writeHead(name, content);
-    for ( int vid=0; vid<=56; vid++ ) {
+    for ( int vid=1; vid<=NV; vid++ ) {
       this.calcFeatures( vid );
       content += this.writeData();
     }
@@ -325,7 +326,7 @@ public class Classifier {
     Classifier csf = new Classifier();
     csf.init();
     
-    for (int vid=1; vid<=56; vid++ ) {
+    for (int vid=1; vid<=NV; vid++ ) {
       csf.writeArrf(vid);
     }
     

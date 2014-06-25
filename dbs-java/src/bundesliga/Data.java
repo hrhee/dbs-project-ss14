@@ -6,6 +6,7 @@ public class Data {
   public String USR;
   public String PW;
   public String FU_DBS;
+  public String RES;
   
   public Data() {
     DB_URL  = "jdbc:mysql://localhost:3306/";
@@ -13,5 +14,6 @@ public class Data {
     USR     = "franz";
     PW      = "bundesliga";
     FU_DBS  = "FU_BL";
+    RES     = "./result/";
   }
 }
