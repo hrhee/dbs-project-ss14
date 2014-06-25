@@ -173,14 +173,14 @@ public class Classifier {
     int start = OFF+1;
     for (int i = start; i < N; i++) {
       if (aSpt[i] != 0) {
-        arrf += aT3s  [i] + ", "; // T3s
-        arrf += aGt3s [i] + ", "; // Gt3s
-        arrf += aN5s  [i] + ", "; // N5s
-        arrf += aTD5s [i] + ", "; // D5s
-        arrf += aHeim [i] + ", "; // D5s
-        arrf += aHt3s [i] + ", "; // Ht3s
-        arrf += aE1s  [i] + ", "; // E1s
-        arrf += aErg  [i] + "\n"; // erg
+        arrf += aT3s  [i]   + ", "; // T3s
+        arrf += aGt3s [i]   + ", "; // Gt3s
+        arrf += aN5s  [i]   + ", "; // N5s
+        arrf += aTD5s [i]   + ", "; // D5s
+        arrf += aHeim [i]   + ", "; // D5s
+        arrf += aHt3s [i]   + ", "; // Ht3s
+        arrf += aE1s  [i]   + ", "; // E1s
+        arrf += aErg  [i]   + "\n"; // erg
       }
     }
     return arrf;
