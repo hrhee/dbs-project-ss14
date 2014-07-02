@@ -17,9 +17,13 @@ a4paper
 
 %\udensdash{\underline{PrimAndForeignKey}}
 
+\usepackage{graphicx}
+\usepackage{listings}
+
+\lstset{language=SQL} 
 
 \title{DBS Projekt SS2014}
-\author{Jan Cortes, Frederic Prackwieser, Franz Rhee}
+\author{Jan Corsten, Frederic Prackwieser, Franz Rhee}
 \date{}
 
 \begin{document}
@@ -29,34 +33,181 @@ a4paper
 
 \section*{Einleitung}
 
-\section{1.~Iteration}
 Es soll eine Datenbank f\"{u}r die Fußball Bundesliga realisiert werden. Die Datenbank speichert Vereine, Spiele, Spieler, und Ligen. Eine Anwendung stellt vergangene Fußballergebnisse bereit. Spieler sind Vereinen zugeordnet. Vereine sind Ligen zugeordnet. Spiele finden immer zwischen einem Gastgeber und einem Gast statt.
 Weiterhin wird die Datenbank für eine Data Mining Anwendung zur Ergebnisprognose genutzt.
-Die folgenden Anfragen sollen durch die Anwendung beantwortet werden k\"{o}nnen:
+
+\section{Erste Iteration}
+
+\subsection{Aufgabenstellung}
 
 \begin{enumerate}
-
-\item An welchem Tag fand das erste Spiel in dieser Saison statt?
-\item Welche Spieler haben in dieser Saison bereits mehr als fünf Tore geschossen?
-\item Zeige die Daten aller Spiele an, die am ersten Spieltag aller drei Ligen nach 17 Uhr begonnen haben.
-\item Welche Spieler spielen für den Verein “FC Bayern München“? Gib auch die Trikotnummer und das Heimatland jedes Spielers sowie die Anzahl seiner Tore mit aus. Ordne die Ergebnisse aufsteigend nach der Trikotnummer.
-\item Wie viele Spiele hat „Hannover 96“ bis heute gewonnen?
-\item Gesucht sind Vereinsname, Spieler{\_}ID, Trikotnummer und Name aller Spieler, die für den Verein spielen, der in dieser Saison die meisten Niederlagen erlitten hat (auch mehrere Vereine mit gleicher Anzahl möglich).
-
+  \item ERDD mit ummgekehrter Chen-Min-Max-Notation in DIA erstellen
+  \item Relationales Modell erstellen
+  \item Datenbank mit dem Namen “bundesliga” anlegen
+  \item Überführen des relationalen Modells in SQL (DDL)
+  \item Erstellen der Tabellen in der Datenbank “bundesliga”
 \end{enumerate}
 
-\subsection{Anlegen der Datenbank}
-Legen Sie eine Datenbank mit dem Namen „bundesliga“ an.
+\subsection{ERDD mit ummgekehrter Chen-Min-Max-Notation}
 
-\subsection{Modellierung}
-Entwerfen Sie auf Grundlage der Anwendungsbeschreibung und den Daten ein Datenbankschema in, aus der Vorlesung bekannten umgekehrten Chen-Notation mit (min, max) Erweiterung.
+Um das ERDD mit ummgekehrter Chen-Min-Max-Notation zu erstellen, haben wir aus der Anwendungsbechreibung fünf Entitätstypen identifiziert und jenen folgende Attribute  zugeordnet:
 
-\subsection{\"{U}bersetzen ins relationale Modell und SQL}
-Schreiben Sie die entsprechenden SQL-Queries zur Erstellung der Tabellen. Achten Sie auf eine gute Wahl von Attributeigenschaften wie NOT NULL, UNIQUE und Schl\"{u}sseln.
+ \begin{itemize}
+  \item \textbf{Liga}
+  \begin{itemize}  
+     \item Id
+      \item Name
+   \end{itemize}
 
-\section{2.~Iteration}
+ \item\textbf{ Verein}
+  \begin{itemize}  
+     \item Id
+      \item Name
+   \end{itemize}
 
-\section{3.~Iteration}
+\item \textbf{Spieler}
+  \begin{itemize}  
+     \item Id
+      \item Name
+     \item Trikotnummer
+      \item Name
+   \end{itemize}
 
-\section{4.~Iteration}
+\item \textbf{Tor}
+  \begin{itemize}  
+     \item Id
+   \end{itemize}
+
+\item \textbf{Spiel}
+  \begin{itemize}  
+     \item Id
+      \item Ergebnis: ToreHeim, ToreAus
+     \item Termin: Datum, Uhrzeit
+      \item Spieltag
+    \item Saison
+   \end{itemize}
+ \end{itemize}
+
+Zwischen diesen Entitätstypen haben wir diese Beziehungen beobachtet:\\
+\\
+\textbf{Liga – Verein}\\
+In einer Liga spielen 1 bis 25 Vereine\\
+Ein Verein spielt in keiner oder einer Liga\\
+\\
+\textbf{Verein – Spieler}\\
+Ein Verein hat 11 bis unendlich viele Spieler\\
+Ein Spieler spielt in genau einem Verein\\
+\\
+\textbf{Verein – Spiel}\\
+Ein Verein hat 1 bis 25 Spiele als Gast- und als Heimverein\\
+Ein Spiel hat ein Gast- und ein Heimverein\\
+\\
+\textbf{Spiel – Tor}\\
+Ein Spiel hat 0 bis unendlich viele Tore\\
+Ein Tor wird in genau einem Spiel geschossen \\
+\\
+\textbf{Spieler – Tor}\\
+Ein Spieler schiesst keine oder unendlich viele Tore\\
+Ein Tor wird von genau einem Spieler geschossen \\ 
+\\
+
+Abbildung~\ref{fig1} bildet unsere Modellierung als ERDD mit ummgekehrter Chen-Min-Max-Notation ab.
+
+\begin{figure}[hb]
+	\centering
+  \includegraphics[scale=0.5]{bundesliga_iter1.png}
+	\caption{ERDD mit ummgekehrter Chen-Min-Max-Notation}
+	\label{fig1}
+\end{figure}
+
+\subsection{Modifikation der Modellierung}
+
+Wir haben festgestellt, oder vielmehr wurden wir in der ersten Iterationspräsentation darauf hingewiesen, dass obiges Modell keine hinreichende Abbildung der Anwendungbeschreibung darstellt, da nicht alle Anfragen beantwortet werden können. Daraufhin haben wir unser Design überarbeiet und in Abbildung~\ref{fig2} ein ERRD erstellt das nun folgende Anfragen ermöglicht:
+
+ \begin{itemize}
+  \item Vereinswechsel von Spieler
+  \item Welche Tore für welchen Verein
+  \item Welche Trikotnummer
+  \item Welcher Verein spielt wann in welcher Liga
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+  \includegraphics[scale=0.4]{bundesliga.png}
+	\caption{Modifiziertes ERDD mit ummgekehrter Chen-Min-Max-Notation}
+	\label{fig2}
+\end{figure}
+
+\subsection{Relationales Modell }
+
+Abbildung~\ref{fig3} zeigt das relationale Modell, welches wir aus dem überarbeiteten ERDD übersetzt haben. Es zeigt die aus dem ERDD abgelesenen Relationen und die Fremdschlüssel  Abhängigkeit dieser auf.
+
+\begin{figure}[h]
+	\centering
+  \includegraphics[scale=0.43]{relat.png}
+	\caption{Relationales Modell }
+	\label{fig3}
+\end{figure}
+
+\subsection{Erstellen der Tabellen in der Datenbank “bundesliga”}
+Anhand des relationalen Modells aus Abbildung~\ref{fig3} haben wir nun mit folgenden SQL Queries die benötigten Tabellen für unsere Bundesliga Datenbank erstellt.
+ 
+\lstinputlisting[language=Sql, firstline=29, lastline=148, frame=single]{../dbs-sql/FU_Buli_create.sql}
+
+\subsection{Projektverlauf der ersten Iteration}
+
+Die genauen Arbeitsanweisungen des Projekts wurden im Tutorium von Nicolas Lehmann vorgestellt. Daraufhin haben sich drei Unbekannte  zu einem Team zusammengefunden, um das Projekt in Angriff zu nehmen.\\
+Für die erste Iteration haben wir uns darauf geeinigt PostgreSQL zu verwenden, und für die Erstellung der Diagramme Dia zu benutzen. Unsere Kommunikation erfolgte überwiegend per Email und für den Austausch von Daten haben wir das git  Repository https://github.com/hrhee/dbs-project-ss14/ genutzt.\\
+In einem Projekttreffen vor der Präsentation der ersten Iteration, haben wir die Aufgabenstellungen zusammen diskutiert und gemeinsam Lösungen gefunden.
+
+\subsubsection{Aufgabenaufteilung}
+\begin{tabular}{ l l c }
+Jan Corsten & SQL Queries &  2h \\
+Frederic Prackwieser & Erstellung des ERRD in Dia  & 2h \\
+Franz Rhee & Präsentation & 2h \\
+\end{tabular}
+
+\section{ Zweite Iteration}
+
+\subsection{Aufgabenstellung}
+
+\begin{enumerate}
+  \item Datentransformation mit SQL
+  \item Datentransformation mit Java
+  \item Data Mining: Einen Klassifikator lernen (Klassifikator erstellen) welcher ein kommendes Spielergebnis prognostizieren kann
+\end{enumerate}
+
+\subsection{Datentransformation mit SQL}
+\lstinputlisting[language=Sql, frame=single]{../dbs-sql/FU_Buli_import.sql}
+
+\subsection{Datentransformation mit Java}
+
+\begin{figure}[ht]
+	\centering
+  \includegraphics[scale=0.7]{Classifier.png}
+	\caption{Klassendiagramm: Classifier}
+	\label{fig5}
+\end{figure}
+
+
+\subsection{Data Mining}
+\begin{figure}[hb]
+	\centering
+  \includegraphics[scale=0.7]{BL.png}
+	\caption{Klassendiagramm: BL}
+	\label{fig4}
+\end{figure}
+
+
+
+\subsection{Projektverlauf der zweiten Iteration}
+bla bla
+
+\subsubsection{Aufgabenaufteilung}
+\begin{tabular}{ l l c }
+Jan Corsten & SQL Queries, Präsentation &  ?h \\
+Frederic Prackwieser & ???  & ?h \\
+Franz Rhee & Java und Weka & 10h \\
+\end{tabular}
+
 \end{document}
