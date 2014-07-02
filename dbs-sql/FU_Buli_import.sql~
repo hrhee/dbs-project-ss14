@@ -22,7 +22,6 @@ SELECT Liga.Liga_Nr, Verein.V_ID, 2013
 FROM `bundesliga`.`Liga`, `bundesliga`.`Verein`;
 
 INSERT INTO `FU_Buli`.`Spielt_fuer`
-SELECT Spieler.Spieler_ID, Verein.V_ID, 2013, 
-       Spieler.Tore, Spieler.Trikot_Nr
+SELECT Spieler.Spieler_ID, Verein.V_ID, 2013, Spieler.Tore, Spieler.Trikot_Nr
 FROM `bundesliga`.`Spieler`, `bundesliga`.`Verein`;
 
