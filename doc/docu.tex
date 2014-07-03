@@ -272,14 +272,14 @@ Beispielhaft für ein Feature betrachten wir in Abbildung~\ref{fig:heim} die Auf
 \label{fig:heim}
 \end{figure}
 
-Die aquirierten Feature Vektoren (siehe oben) wurden nun in Weka unter Verwendung des Naive Bayes Algorithmus ausgewertet, um einen Klassifikator zur Spielprognose zu gewinnen. Hierfür benutzten wir die Methoden Use Training Set und Cross Validation ( mit 10 Faltungen ).\\
+Die aquirierten Feature Vektoren wurden nun in Weka unter Verwendung des Naive Bayes Algorithmus ausgewertet, um einen Klassifikator zur Spielprognose zu gewinnen. Hierfür benutzten wir die Methoden Use Training Set und Cross Validation (mit 10 Faltungen).\\
 
 Listing~\ref{lst:fcb} zeigt exemplarisch den Naive Bayes Klassifikator für die Mannschaft FC Bayern München, wobei in der Cross Validation 10 Faltungen verwendet worden sind. 
 Es wurden $73.53\%$ der Spiele richtig prognostiziert.
 
 \lstinputlisting[language={},inputencoding={utf8},extendedchars=false, label={lst:fcb}, caption={Naive Bayes, Cross Validation}]{bayern_crossval.weka}
 
-Allgemein stellten wir fest, dass eine richtige Ergebnis-Prognose für einen Verein bei über ca.~$50\%$ liegt und somit deutlich besser als eine Vorhersage, die jedes Spielergebnis (gewonnen, verloren, unentschieden) gleichgewichtet vorhersagt.
+Allgemein stellten wir fest, dass eine richtige Ergebnis-Prognose für einen Verein bei ca.~über $50\%$ liegt und somit deutlich besser als eine Vorhersage, die jedes Spielergebnis (gewonnen, verloren, unentschieden) gleichgewichtet vorhersagt.
 
 
 \subsection{Projektverlauf der zweiten Iteration}
