@@ -227,7 +227,7 @@ In der  \texttt{main}-Methode (siehe Listing~\ref{lst:bl}) erstellen die Methode
 
 \lstinputlisting[style=java, firstline=306, lastline=317, label={lst:bl}, caption={Main Methode}]{../dbs-java/src/bundesliga/BL.java}
 
-Die Methode \texttt{dropTables\_dst()} l\"{o}scht ggf.~schon existierende gleichnamige Tabellen. Im n\"{a}chsten Schritte werden unsere Tabellen erstellt ( \texttt{createTables\_dst()}) und sogleich mit Daten aus der Quelldatenbank gef\"{u}llt ( \texttt{fillTables\_dst()}). Abschlie{\ss}end werden dann in der main-Methode in der  \texttt{deinit()} Methode alle Connections abgebaut.
+Die Methode \texttt{dropTables\_dst()} l\"{o}scht ggf.~schon existierende gleichnamige Tabellen in der Zieldatenbank. Im n\"{a}chsten Schritte werden unsere Tabellen in der Zieldatenbank erstellt ( \texttt{createTables\_dst()}) und sogleich mit Daten aus der Quelldatenbank gef\"{u}llt ( \texttt{fillTables\_dst()}). Abschlie{\ss}end werden dann in der  \texttt{deinit()} Methode alle Connections abgebaut.
 
 \begin{figure}[H]
 \centering
@@ -289,9 +289,9 @@ Insgesamt waren die Arbeitsabläufe innerhalb unseres Teams ähnlich der letzten
 
 \subsubsection{Aufgabenaufteilung}
 \begin{tabular}{ l l c }
-Jan Corsten & SQL Queries, Präsentation & 7h \\
-Frederic Prackwieser & Dokumentation & 3h \\
-Franz Rhee & Java und Data Mining & 10h \\
+Jan Corsten & SQL Queries, Präsentation & 6h \\
+Frederic Prackwieser & Dokumentation & 2h \\
+Franz Rhee & Java und Data Mining & 8h \\
 \end{tabular}
 
 \end{document}
