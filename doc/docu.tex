@@ -250,7 +250,7 @@ Im ersten Schritt haben wir uns zusammen neben den geforderten noch weitere sinn
   \item Tore der letzten drei Heimspiele
  \end{itemize}
 
-Abbildung~\ref{fig:classi} zeigt das Klassendiagramm der Java Implementierung zur Erstellung des Klassifikators. Hier wird wie schon bei der Datentransformation eine Connection zu unserer Datenbank aufgebaut, um aus diesen die relevanten Daten zur Feature Berechnung zu extrahieren.\\
+Abbildung~\ref{fig:classi} zeigt das Klassendiagramm der Java Implementierung zur Erstellung des Klassifikators. Hier wird wie schon bei der Datentransformation eine Connection zu unserer Datenbank aufgebaut, um aus dieser die relevanten Daten zur Feature Berechnung zu extrahieren.\\
 
 \begin{figure}[H]
 \centering
@@ -259,7 +259,7 @@ Abbildung~\ref{fig:classi} zeigt das Klassendiagramm der Java Implementierung zu
 \label{fig:classi}
 \end{figure}
 
-Die Berechnung der oben aufgelisteten Features findet in der Methode \texttt{calcFeatures(int vid)} statt (siehe Listing~\ref{lst:cl}). Pro Spieltag werden die benötigten Daten aus der Datenbank in einem Array gesammelt, um aus diesen ein Feature pro Spieltag zu berechnen.\\
+Die Berechnung der oben aufgelisteten Features findet in der Methode \texttt{calcFeatures(int vid)} statt (siehe Listing~\ref{lst:cl}). Pro Spieltag werden die benötigten Daten aus der Datenbank in einem Array gesammelt, um aus diesem ein Feature pro Spieltag zu berechnen.\\
 
 \lstinputlisting[style=java,firstline=189, lastline=292, label={lst:cl}, caption={calcFeatures(int vid)}]{../dbs-java/src/bundesliga/Classifier.java}
 
