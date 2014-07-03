@@ -21,7 +21,9 @@ a4paper
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{courier}
-
+\usepackage{float}
+\usepackage{verbatim}
+\usepackage{fancyvrb}
 
 \title{DBS Projekt SS2014}
 \author{Jan Corsten, Frederic Prackwieser, Franz Rhee}
@@ -141,18 +143,18 @@ Ein Spieler schie"st keine oder unendlich viele Tore\\
 Ein Tor wird von genau einem Spieler geschossen \\ 
 \\
 
-Abbildung~\ref{fig1} bildet unsere Modellierung als ERDD mit umgekehrter Chen-Min-Max-Notation ab.
+Abbildung~\ref{fig:buli_iter1} bildet unsere Modellierung als ERDD mit umgekehrter Chen-Min-Max-Notation ab.
 
-\begin{figure}[hb]
+\begin{figure}[H]
 	\centering
   \includegraphics[scale=0.5]{bundesliga_iter1.png}
 	\caption{ERDD mit umgekehrter Chen-Min-Max-Notation}
-	\label{fig1}
+	\label{fig:buli_iter1}
 \end{figure}
 
 \subsection{Modifikation der Modellierung}
 
-Wir haben festgestellt, oder vielmehr wurden wir in der ersten Iterationspräsentation darauf hingewiesen, dass obiges Modell keine hinreichende Abbildung der Anwendungsbeschreibung darstellt, da nicht alle Anfragen beantwortet werden können. Daraufhin haben wir unser Design überarbeitet und in Abbildung~\ref{fig2} ein ERRD erstellt das nun folgende Anfragen ermöglicht:
+Wir haben festgestellt, oder vielmehr wurden wir in der ersten Iterationspräsentation darauf hingewiesen, dass obiges Modell keine hinreichende Abbildung der Anwendungsbeschreibung darstellt, da nicht alle Anfragen beantwortet werden können. Daraufhin haben wir unser Design überarbeitet und in Abbildung~\ref{fig:buli} ein ERRD erstellt das nun folgende Anfragen ermöglicht:
 
  \begin{itemize}
   \item Vereinswechsel von Spieler
@@ -161,38 +163,38 @@ Wir haben festgestellt, oder vielmehr wurden wir in der ersten Iterationspräsen
   \item Welcher Verein spielt wann in welcher Liga
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
   \includegraphics[scale=0.4]{bundesliga.png}
 	\caption{Modifiziertes ERDD mit umgekehrter Chen-Min-Max-Notation}
-	\label{fig2}
+	\label{fig:buli}
 \end{figure}
 
 \subsection{Relationales Modell }
 
-Abbildung~\ref{fig3} zeigt das relationale Modell, welches wir aus dem überarbeiteten ERDD übersetzt haben. Es zeigt die aus dem ERDD abgelesenen Relationen und die Fremdschlüssel  Abhängigkeit dieser auf.
+Abbildung~\ref{fig:relat} zeigt das relationale Modell, welches wir aus dem überarbeiteten ERDD übersetzt haben. Es zeigt die aus dem ERDD abgelesenen Relationen und die Fremdschlüssel  Abhängigkeit dieser auf.
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
   \includegraphics[scale=0.6]{relat.jpg}
 	\caption{Relationales Modell }
-	\label{fig3}
+	\label{fig:relat}
 \end{figure}
 
 \subsection{Erstellen der Tabellen in der Datenbank “bundesliga”}
-Anhand des relationalen Modells aus Abbildung~\ref{fig3} haben wir nun mit folgenden SQL Queries die benötigten Tabellen für unsere Bundesliga Datenbank erstellt.
+Anhand des relationalen Modells aus Abbildung~\ref{fig:relat} haben wir nun mit den in Listing~\ref{lst:create} aufgeführten SQL Queries die benötigten Tabellen für unsere Bundesliga Datenbank erstellt.
  
-\lstinputlisting[firstline=29, lastline=148, style=sql]{../dbs-sql/FU_Buli_create.sql}
+\lstinputlisting[firstline=29, lastline=148, style=sql, label={lst:create}, caption={create.sql}]{../dbs-sql/FU_Buli_create.sql}
 
 \subsection{Projektverlauf der ersten Iteration}
 
 Die genauen Arbeitsanweisungen des Projekts wurden im Tutorium von Nicolas Lehmann vorgestellt. Daraufhin haben sich drei Unbekannte  zu einem Team zusammengefunden, um das Projekt in Angriff zu nehmen.\\
-Für die erste Iteration haben wir uns darauf geeinigt PostgreSQL zu verwenden, und für die Erstellung der Diagramme Dia zu benutzen. Unsere Kommunikation erfolgte überwiegend per Email und für den Austausch von Daten haben wir das git  Repository https://github.com/hrhee/dbs-project-ss14/ genutzt.\\
+Für die erste Iteration haben wir uns darauf geeinigt PostgreSQL zu verwenden, und für die Erstellung der Diagramme Dia zu benutzen. Unsere Kommunikation erfolgte überwiegend per Email und für den Austausch von Daten haben wir das git  Repository \texttt{https://github.com/hrhee/dbs-project-ss14/} genutzt.\\
 In einem Projekttreffen vor der Präsentation der ersten Iteration, haben wir die Aufgabenstellungen zusammen diskutiert und gemeinsam Lösungen gefunden.
 
 \subsubsection{Aufgabenaufteilung}
 \begin{tabular}{ l l c }
-Jan Corsten & SQL Queries &  3h \\
+Jan Corsten & SQL Queries, Relationales Modell, Modifikation &  3h \\
 Frederic Prackwieser & Erstellung des ERRD in Dia  & 3h \\
 Franz Rhee & Präsentation & 1h \\
 \end{tabular}
@@ -208,9 +210,9 @@ Franz Rhee & Präsentation & 1h \\
 \end{enumerate}
 
 \subsection{Datentransformation mit SQL}
-Hierzu haben wir uns erstmal entschieden von PostgreSQl auf MySQL umzusteigen, um die Datenbank der Universit"at Bayreuth, die mit MySQL erstellt wurde, leichter importieren zu k"onnen. Wir haben dann das Tool phpMyAdmin benutzt, um die Datenbank zu importieren und die Datentransformation durchzuf"uhren.
+Hierzu haben wir uns erstmal entschieden von PostgreSQL auf MySQL umzusteigen, um die Datenbank der Universit"at Bayreuth, die mit MySQL erstellt wurde, leichter importieren zu k"onnen. Wir haben dann das Tool phpMyAdmin benutzt, um die Datenbank zu importieren und die Datentransformation durchzuf"uhren.
 
-Nachdem wir unser "uberarbeitetes relationales Modell aus Abbildung \ref{fig3} auch in My{-}SQL "uberf"uhrt haben, konnten wir dann die gew"unschten Spalten aus der importierten Datenbank "`bundesliga"' ausw"ahlen und in unsere Datenbank "`mybuli"' importieren. Die entsprechenden SELECT- und IMPORT Anweisungen sind in Listing \ref{listingsql}.
+Nachdem wir unser "uberarbeitetes relationales Modell aus Abbildung \ref{fig:relat} auch in My{-}SQL "uberf"uhrt haben, konnten wir dann die gew"unschten Spalten aus der importierten Datenbank "`bundesliga"' ausw"ahlen und in unsere Datenbank "`mybuli"' importieren. Die entsprechenden SELECT- und IMPORT Anweisungen sind in Listing \ref{listingsql}.
 
 \lstinputlisting[style=sql, caption=Datentransformation mit SQL, 
 label=listingsql]{../dbs-sql/FU_Buli_import.sql}
@@ -219,24 +221,24 @@ label=listingsql]{../dbs-sql/FU_Buli_import.sql}
 
 Dieser Abschnitt behandelt die Datentransformation der Daten aus dem Quell-Datenmodell (http://dbup2date.uni-bayreuth.de/bundesliga.html) in das in Iteration 1 erstellte eigene Ziel-Datenmodell mit Hilfe von Java und der API JDBC.\\
 
-Die Klasse BL beinhaltet unsere Java L\"{o}sung zur Datentransformation. Das Klassendiagramm ist in Abbildung~\ref{fig4} abgebildet.\\
+Die Klasse BL beinhaltet unsere Java L\"{o}sung zur Datentransformation. Das Klassendiagramm ist in Abbildung~\ref{fig:BL} abgebildet.\\
 
-In der main-Methode (siehe Listing~\ref{lst:bl}) erstellen die Methoden init\_src() und init\_dst() eine Connection zur Quelldatenbank bzw.~zur Zieldatenbank.
+In der  \texttt{main}-Methode (siehe Listing~\ref{lst:bl}) erstellen die Methoden  \texttt{init\_src()} und \texttt{ init\_dst()} eine Connection zur Quelldatenbank bzw.~zur Zieldatenbank.
 
 \lstinputlisting[style=java, firstline=306, lastline=317, label={lst:bl}, caption={Main Methode}]{../dbs-java/src/bundesliga/BL.java}
 
-Die MethodedropTables\_dst() l\"{o}scht ggf.~schon existierende gleichnamige Tabellen. Im n\"{a}chsten Schritte werden unsere Tabellen erstellt (createTables\_dst()) und sogleich mit Daten aus der Quelldatenbank gef\"{u}llt (fillTables\_dst()). Abschlie{\ss}end werden dann in der main-Methode in der deinit() Methode alle Connections abgebaut.
+Die Methode \texttt{dropTables\_dst()} l\"{o}scht ggf.~schon existierende gleichnamige Tabellen. Im n\"{a}chsten Schritte werden unsere Tabellen erstellt ( \texttt{createTables\_dst()}) und sogleich mit Daten aus der Quelldatenbank gef\"{u}llt ( \texttt{fillTables\_dst()}). Abschlie{\ss}end werden dann in der main-Methode in der  \texttt{deinit()} Methode alle Connections abgebaut.
 
-\begin{figure}[hb]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{BL.png}
 \caption{Klassendiagramm BL}
-\label{fig4}
+\label{fig:BL}
 \end{figure}
 
 \subsection{Data Mining}
-Als ersten Schritt haben wir uns zusammen neben den geforderten noch weitere sinnvolle Features überlegt
-und uns für folgende entschieden:
+
+Im ersten Schritt haben wir uns zusammen neben den geforderten noch weitere sinnvolle Features überlegt und uns für folgende entschieden:
 
  \begin{itemize}
   \item Tore der letzten 3 Spiele
@@ -248,61 +250,48 @@ und uns für folgende entschieden:
   \item Tore der letzten drei Heimspiele
  \end{itemize}
 
-Abbildung~\ref{fig5} zeigt den Aufbau des Java Codes zur Erstellung der Arff-Datei.
-\begin{figure}[ht]
+Abbildung~\ref{fig:classi} zeigt das Klassendiagramm der Java Implementierung zur Erstellung des Klassifikators. Hier wird wie schon bei der Datentransformation eine Connection zu unserer Datenbank aufgebaut, um aus diesen die relevanten Daten zur Feature Berechnung zu extrahieren.\\
+
+\begin{figure}[H]
 \centering
-  \includegraphics[scale=0.7]{Classifier.png}
+  \includegraphics[scale=0.6]{Classifier.png}
 \caption{Klassendiagramm: Classifier}
-\label{fig5}
+\label{fig:classi}
 \end{figure}
 
-Die Daten für die Arff-Datei werden in der Methode calcFeatures erstellt.
-Für jeden Verein wird ein Datensatz mit den oben genannten Attributen nacheinender erstellt
-\lstinputlisting[style=java,firstline=189, lastline=292]{../dbs-java/src/bundesliga/Classifier.java}
+Die Berechnung der oben aufgelisteten Features findet in der Methode \texttt{calcFeatures(int vid)} statt (siehe Listing~\ref{lst:cl}). Pro Spieltag werden die benötigten Daten aus der Datenbank in einem Array gesammelt, um aus diesen ein Feature pro Spieltag zu berechnen.\\
 
-Und letztendlich erhielten wir folgende Ausgabe
+\lstinputlisting[style=java,firstline=189, lastline=292, label={lst:cl}, caption={calcFeatures(int vid)}]{../dbs-java/src/bundesliga/Classifier.java}
 
-\begin{figure}[ht1]
+Beispielhaft für ein Feature betrachten wir in Abbildung~\ref{fig:heim} die Auflistung des Features Heimspiel (d.h.~ob das Spiel der Mannschaft im eigenen Stadion stattgefunden hat), wobei türkis für gewonnen, blau für unentschieden und rot für verloren steht. Die linke Auflistung zeigt die Ergebnisse bei Heimspielen und die rechte Auflistung die Ergebnisse bei Auswärtsspielen. Wie man beobachten kann, hat die Mannschaft bei Heimspielen mehr Spiele gewonnen als auswärts.
+
+\begin{figure}[H]
 \centering
-  \includegraphics[scale=0.3]{Ausgabe.png}
-\caption{Übersicht des Ausgegebenen Arff-Dateien}
-\label{fig6}
+  \includegraphics[scale=0.4]{fcb_heim.png}
+\caption{Korrelation des Features Heimspiel zum Spielergebnis}
+\label{fig:heim}
 \end{figure}
 
-Nun mussten wir überlegen, was für eine Art von Prognose wir eigentlich anhand der Daten bekommen können.
-Letztendlich gibt es die Möglichkeit anhand eines Trainingssets( z.B. die letzten 10 Spiele) die nächsten Spiele für einen Verein zu prognostizieren
-und wir erhielten das folgende Ergebnis
+Die aquirierten Feature Vektoren (siehe oben) wurden nun in Weka unter Verwendung des Naive Bayes Algorithmus ausgewertet, um einen Klassifikator zur Spielprognose zu gewinnen. Hierfür benutzten wir die Methoden Use Training Set und Cross Validation ( mit 10 Faltungen ).\\
 
-\begin{figure}[ht2]
-\centering
-  \includegraphics[scale=0.3]{Weka2.png}
-\caption{Beispiel Bayern München}
-\label{fig7}
-\end{figure}
+Listing~\ref{lst:fcb} zeigt exemplarisch den Naive Bayes Klassifikator für die Mannschaft FC Bayern München, wobei in der Cross Validation 10 Faltungen verwendet worden sind. 
+Es wurden $73.53\%$ der Spiele richtig prognostiziert.
 
-Ebenso kamen wir auf die Idee aus den Spielen aller Vereine die Ergebnisse kommender Spiele vorauszusagen
+\lstinputlisting[language={},inputencoding={utf8},extendedchars=false, label={lst:fcb}, caption={Naive Bayes, Cross Validation}]{bayern_crossval.weka}
 
-\begin{figure}[ht3]
-\centering
-  \includegraphics[scale=0.3]{Weka1.png}
-\caption{Beispiel alle Spiele}
-\label{fig8}
-\end{figure}
+Allgemein stellten wir fest, dass eine richtige Ergebnis-Prognose für einen Verein bei über ca.~$50\%$ liegt und somit deutlich besser als eine Vorhersage, die jedes Spielergebnis (gewonnen, verloren, unentschieden) gleichgewichtet vorhersagt.
 
-Wir stellten fest, dass die Genauigkeit für einen durchschnittlichen Verein oft bei über $50\%$ liegt und manchmal sogar bei über $70\%$
-und somit deutlich besser als für zufälliges Vorhersagen ist.
 
 \subsection{Projektverlauf der zweiten Iteration}
-Insgesamt waren die Arbeitsabläufe innerhalb unseres Teams ähnlich der letzten Iteration. Wir nutzten wieder das github Repository zum Austausch.
 
-
+Insgesamt waren die Arbeitsabläufe innerhalb unseres Teams ähnlich der letzten Iteration. Die Arbeitsatmosphäre war sehr respektvoll und das gemeinsame Arbeiten war sehr produktiv. Wir haben uns für die zweite Iteration zweimal getroffen und haben gemeinsam schnell und zielstrebig Lösungen für die geforderten Arbeitsaufträge erarbeitet.
  
 
 \subsubsection{Aufgabenaufteilung}
 \begin{tabular}{ l l c }
-Jan Corsten & SQL Queries, Präsentation & 5h \\
-Frederic Prackwieser & Data Mining & 5h \\
-Franz Rhee & Java und Weka & 10h \\
+Jan Corsten & SQL Queries, Präsentation & 7h \\
+Frederic Prackwieser & Dokumentation & 3h \\
+Franz Rhee & Java und Data Mining & 10h \\
 \end{tabular}
 
 \end{document}

@@ -1,0 +1,96 @@
+=== Run information ===
+
+Scheme:weka.classifiers.bayes.NaiveBayes 
+Relation:     FC_Bayern_München
+Instances:    34
+Attributes:   8
+              T3S
+              GT3S
+              N5S
+              D5S
+              Heim
+              Ht3s
+              E1s
+              ergebnis
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+Naive Bayes Classifier
+
+                 Class
+Attribute           -1       0       1
+                (0.08)  (0.11)  (0.81)
+=======================================
+T3S
+  mean           6.9231  6.5385  7.9973
+  std. dev.      1.1538  0.5439  3.5972
+  weight sum          2       3      29
+  precision      1.1538  1.1538  1.1538
+
+GT3S
+  mean           4.0833  1.1667   1.931
+  std. dev.      0.5833  0.9526  1.6292
+  weight sum          2       3      29
+  precision      1.1667  1.1667  1.1667
+
+N5S
+  mean              0.5       0  0.2759
+  std. dev.         0.5  0.1667  0.6897
+  weight sum          2       3      29
+  precision           1       1       1
+
+D5S
+  mean           -0.875  0.0833  0.1207
+  std. dev.       0.375  0.3118  0.4184
+  weight sum          2       3      29
+  precision        0.25    0.25    0.25
+
+Heim
+  true              2.0     2.0    16.0
+  false             2.0     3.0    15.0
+  [total]           4.0     5.0    31.0
+
+Ht3s
+  mean           7.6364  5.9394  7.1097
+  std. dev.      2.5455  1.1999  3.3175
+  weight sum          2       3      29
+  precision      1.2727  1.2727  1.2727
+
+E1s
+  mean             -0.5       1  0.8276
+  std. dev.         0.5  0.1667  0.4601
+  weight sum          2       3      29
+  precision           1       1       1
+
+
+
+Time taken to build model: 0 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances          25               73.5294 %
+Incorrectly Classified Instances         9               26.4706 %
+Kappa statistic                         -0.1127
+Mean absolute error                      0.1706
+Root mean squared error                  0.3804
+Relative absolute error                 85.0232 %
+Root relative squared error            125.8442 %
+Total Number of Instances               34     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0         0.031      0         0         0          0.125    -1
+                 0         0.097      0         0         0          0.634    0
+                 0.862     1          0.833     0.862     0.847      0.479    1
+Weighted Avg.    0.735     0.863      0.711     0.735     0.723      0.472
+
+=== Confusion Matrix ===
+
+  a  b  c   <-- classified as
+  0  0  2 |  a = -1
+  0  0  3 |  b = 0
+  1  3 25 |  c = 1
+
