@@ -19,6 +19,7 @@ a4paper
 
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{courier}
 
 \lstset{language=SQL} 
 
@@ -182,21 +183,24 @@ Franz Rhee & Präsentation & 2h \\
 
 \subsection{Datentransformation mit Java}
 
-\begin{figure}[ht]
-	\centering
-  \includegraphics[scale=0.7]{Classifier.png}
-	\caption{Klassendiagramm: Classifier}
-	\label{fig5}
-\end{figure}
+Dieser Abschnitt behandelt die Datentransformation der Daten aus dem Quell-Datenmodell (http://dbup2date.uni-bayreuth.de/bundesliga.html) in das in Iteration 1 erstellte eigene Ziel-Datenmodell mit Hilfe von \texttt{Java} und der API \texttt{JDBC}.\\
 
+Die Klasse BL beinhaltet unsere Java L\"{o}sung zur Datentransformation. Das Klassendiagramm ist in Abbildung~\ref{fig4} abgebildet.\\
 
-\subsection{Data Mining}
+In der \texttt{main}-Methode (siehe Listing~\ref{lst:bl}) erstellen die Methoden \texttt{init\_src()} und \texttt{init\_dst()} eine Connection zur Quelldatenbank bzw.~zur Zieldatenbank.
+
+\lstinputlisting[language=java, firstline=306, lastline=317, frame=single, label={lst:bl}, caption={Main Methode}]{../dbs-java/src/bundesliga/BL.java}
+
+Die Methode \texttt{dropTables\_dst()} l\"{o}scht ggf.~schon existierende gleichnamige Tabellen. Im n\"{a}chsten Schritte werden unsere Tabellen erstellt (\texttt{createTables\_dst()}) und sogleich mit Daten aus der Quelldatenbank gef\"{u}llt (\texttt{fillTables\_dst()}). Abschlie{\ss}end werden dann in der \texttt{main}-Methode in der \texttt{deinit()} Methode alle Connections abgebaut. 
+
 \begin{figure}[hb]
 	\centering
   \includegraphics[scale=0.7]{BL.png}
-	\caption{Klassendiagramm: BL}
+	\caption{Klassendiagramm BL}
 	\label{fig4}
 \end{figure}
+
+\subsection{Data Mining}
 
 
 
