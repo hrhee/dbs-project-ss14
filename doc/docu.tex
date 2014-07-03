@@ -189,15 +189,15 @@ label=listingsql]{../dbs-sql/FU_Buli_import.sql}
 
 \subsection{Datentransformation mit Java}
 
-Dieser Abschnitt behandelt die Datentransformation der Daten aus dem Quell-Datenmodell (http://dbup2date.uni-bayreuth.de/bundesliga.html) in das in Iteration 1 erstellte eigene Ziel-Datenmodell mit Hilfe von \texttt{Java} und der API \texttt{JDBC}.\\
+Dieser Abschnitt behandelt die Datentransformation der Daten aus dem Quell-Datenmodell (http://dbup2date.uni-bayreuth.de/bundesliga.html) in das in Iteration 1 erstellte eigene Ziel-Datenmodell mit Hilfe von Java und der API JDBC.\\
 
 Die Klasse BL beinhaltet unsere Java L\"{o}sung zur Datentransformation. Das Klassendiagramm ist in Abbildung~\ref{fig4} abgebildet.\\
 
-In der \texttt{main}-Methode (siehe Listing~\ref{lst:bl}) erstellen die Methoden \texttt{init\_src()} und \texttt{init\_dst()} eine Connection zur Quelldatenbank bzw.~zur Zieldatenbank.
+In der main-Methode (siehe Listing~\ref{lst:bl}) erstellen die Methoden init\_src() und init\_dst() eine Connection zur Quelldatenbank bzw.~zur Zieldatenbank.
 
 \lstinputlisting[language=java, firstline=306, lastline=317, frame=single, label={lst:bl}, caption={Main Methode}]{../dbs-java/src/bundesliga/BL.java}
 
-Die Methode \texttt{dropTables\_dst()} l\"{o}scht ggf.~schon existierende gleichnamige Tabellen. Im n\"{a}chsten Schritte werden unsere Tabellen erstellt (\texttt{createTables\_dst()}) und sogleich mit Daten aus der Quelldatenbank gef\"{u}llt (\texttt{fillTables\_dst()}). Abschlie{\ss}end werden dann in der \texttt{main}-Methode in der \texttt{deinit()} Methode alle Connections abgebaut.
+Die MethodedropTables\_dst() l\"{o}scht ggf.~schon existierende gleichnamige Tabellen. Im n\"{a}chsten Schritte werden unsere Tabellen erstellt (createTables\_dst()) und sogleich mit Daten aus der Quelldatenbank gef\"{u}llt (fillTables\_dst()). Abschlie{\ss}end werden dann in der main-Methode in der deinit() Methode alle Connections abgebaut.
 
 \begin{figure}[hb]
 \centering
