@@ -22,7 +22,6 @@ a4paper
 \usepackage{listings}
 \usepackage{courier}
 
-\lstset{language=SQL} 
 
 \title{DBS Projekt SS2014}
 \author{Jan Corsten, Frederic Prackwieser, Franz Rhee}
@@ -32,6 +31,35 @@ a4paper
 
 \maketitle
 \tableofcontents
+
+\lstdefinestyle{java}{language=java,
+numbers=left,
+frame=single,
+backgroundcolor=\color[RGB]{234,237,230},
+numberstyle=\tiny,
+basicstyle={\footnotesize\ttfamily\bfseries},
+frameround=tttt,
+breaklines=true,
+keywordstyle=\color{blue!80!black!100},
+commentstyle=\color{green!50!black!100},
+stringstyle=\ttfamily,
+%identifierstyle=,
+tabsize=2}
+
+\lstdefinestyle{sql}{language=SQL,
+numbers=left,
+frame=single,
+backgroundcolor=\color[RGB]{234,237,230},
+numberstyle=\tiny,
+basicstyle={\footnotesize\ttfamily\bfseries},
+frameround=tttt,
+breaklines=true,
+keywordstyle=\color[RGB]{32,74,135},
+commentstyle=\color[RGB]{143,89,2},
+stringstyle=\color[RGB]{78,154,6},
+%identifierstyle=\color[RGB]{92,53,204},
+tabsize=2
+}
 
 \section*{Einleitung}
 
@@ -154,7 +182,7 @@ Abbildung~\ref{fig3} zeigt das relationale Modell, welches wir aus dem überarbe
 \subsection{Erstellen der Tabellen in der Datenbank “bundesliga”}
 Anhand des relationalen Modells aus Abbildung~\ref{fig3} haben wir nun mit folgenden SQL Queries die benötigten Tabellen für unsere Bundesliga Datenbank erstellt.
  
-\lstinputlisting[language=Sql, firstline=29, lastline=148, frame=single]{../dbs-sql/FU_Buli_create.sql}
+\lstinputlisting[firstline=29, lastline=148, style=sql]{../dbs-sql/FU_Buli_create.sql}
 
 \subsection{Projektverlauf der ersten Iteration}
 
@@ -184,7 +212,7 @@ Hierzu haben wir uns erstmal entschieden von PostgreSQl auf MySQL umzusteigen, u
 
 Nachdem wir unser "uberarbeitetes relationales Modell aus Abbildung \ref{fig3} auch in My{-}SQL "uberf"uhrt haben, konnten wir dann die gew"unschten Spalten aus der importierten Datenbank "`bundesliga"' ausw"ahlen und in unsere Datenbank "`mybuli"' importieren. Die entsprechenden SELECT- und IMPORT Anweisungen sind in Listing \ref{listingsql}.
 
-\lstinputlisting[language=Sql, frame=single, caption=Datentransformation mit SQL, 
+\lstinputlisting[style=sql, caption=Datentransformation mit SQL, 
 label=listingsql]{../dbs-sql/FU_Buli_import.sql}
 
 \subsection{Datentransformation mit Java}
@@ -195,7 +223,7 @@ Die Klasse BL beinhaltet unsere Java L\"{o}sung zur Datentransformation. Das Kla
 
 In der main-Methode (siehe Listing~\ref{lst:bl}) erstellen die Methoden init\_src() und init\_dst() eine Connection zur Quelldatenbank bzw.~zur Zieldatenbank.
 
-\lstinputlisting[language=java, firstline=306, lastline=317, frame=single, label={lst:bl}, caption={Main Methode}]{../dbs-java/src/bundesliga/BL.java}
+\lstinputlisting[style=java, firstline=306, lastline=317, label={lst:bl}, caption={Main Methode}]{../dbs-java/src/bundesliga/BL.java}
 
 Die MethodedropTables\_dst() l\"{o}scht ggf.~schon existierende gleichnamige Tabellen. Im n\"{a}chsten Schritte werden unsere Tabellen erstellt (createTables\_dst()) und sogleich mit Daten aus der Quelldatenbank gef\"{u}llt (fillTables\_dst()). Abschlie{\ss}end werden dann in der main-Methode in der deinit() Methode alle Connections abgebaut.
 
@@ -230,7 +258,7 @@ Abbildung~\ref{fig5} zeigt den Aufbau des Java Codes zur Erstellung der Arff-Dat
 
 Die Daten für die Arff-Datei werden in der Methode calcFeatures erstellt.
 Für jeden Verein wird ein Datensatz mit den oben genannten Attributen nacheinender erstellt
-\lstinputlisting[language=java, firstline=189, lastline=292, breaklines=true, frame=single]{../dbs-java/src/bundesliga/Classifier.java}
+\lstinputlisting[style=java,firstline=189, lastline=292]{../dbs-java/src/bundesliga/Classifier.java}
 
 Und letztendlich erhielten wir folgende Ausgabe
 
