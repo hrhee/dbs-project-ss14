@@ -24,6 +24,7 @@ a4paper
 \usepackage{float}
 \usepackage{verbatim}
 \usepackage{fancyvrb}
+\usepackage[colorlinks=false,hidelinks]{hyperref}
 
 \title{DBS Projekt SS2014}
 \author{Jan Corsten, Frederic Prackwieser, Franz Rhee}
@@ -189,7 +190,7 @@ Anhand des relationalen Modells aus Abbildung~\ref{fig:relat} haben wir nun mit 
 \subsection{Projektverlauf der ersten Iteration}
 
 Die genauen Arbeitsanweisungen des Projekts wurden im Tutorium von Nicolas Lehmann vorgestellt. Daraufhin haben sich drei Unbekannte  zu einem Team zusammengefunden, um das Projekt in Angriff zu nehmen.\\
-Für die erste Iteration haben wir uns darauf geeinigt PostgreSQL zu verwenden, und für die Erstellung der Diagramme Dia zu benutzen. Unsere Kommunikation erfolgte überwiegend per Email und für den Austausch von Daten haben wir das git  Repository \texttt{https://github.com/hrhee/dbs-project-ss14/} genutzt.\\
+Für die erste Iteration haben wir uns darauf geeinigt PostgreSQL zu verwenden, und für die Erstellung der Diagramme Dia zu benutzen. Unsere Kommunikation erfolgte überwiegend per Email und für den Austausch von Daten haben wir das git  Repository \url{https://github.com/hrhee/dbs-project-ss14/} genutzt.\\
 In einem Projekttreffen vor der Präsentation der ersten Iteration, haben wir die Aufgabenstellungen zusammen diskutiert und gemeinsam Lösungen gefunden.
 
 \subsubsection{Aufgabenaufteilung}
@@ -219,7 +220,7 @@ label=listingsql]{../dbs-sql/FU_Buli_import.sql}
 
 \subsection{Datentransformation mit Java}
 
-Dieser Abschnitt behandelt die Datentransformation der Daten aus dem Quell-Datenmodell (http://dbup2date.uni-bayreuth.de/bundesliga.html) in das in Iteration 1 erstellte eigene Ziel-Datenmodell mit Hilfe von Java und der API JDBC.\\
+Dieser Abschnitt behandelt die Datentransformation der Daten aus dem Quell Datenmodell (\url{http://dbup2date.uni-bayreuth.de/bundesliga.html}) in das in Iteration 1 erstellte eigene Ziel-Datenmodell mit Hilfe von Java und der API JDBC.\\
 
 Die Klasse BL beinhaltet unsere Java L\"{o}sung zur Datentransformation. Das Klassendiagramm ist in Abbildung~\ref{fig:BL} abgebildet.\\
 
@@ -227,7 +228,7 @@ In der  \texttt{main}-Methode (siehe Listing~\ref{lst:bl}) erstellen die Methode
 
 \lstinputlisting[style=java, firstline=306, lastline=317, label={lst:bl}, caption={Main Methode}]{../dbs-java/src/bundesliga/BL.java}
 
-Die Methode \texttt{dropTables\_dst()} l\"{o}scht ggf.~schon existierende gleichnamige Tabellen in der Zieldatenbank. Im n\"{a}chsten Schritte werden unsere Tabellen in der Zieldatenbank erstellt ( \texttt{createTables\_dst()}) und sogleich mit Daten aus der Quelldatenbank gef\"{u}llt ( \texttt{fillTables\_dst()}). Abschlie{\ss}end werden dann in der  \texttt{deinit()} Methode alle Connections abgebaut.
+Die Methode \texttt{dropTables\_dst()} l\"{o}scht ggf.~schon existierende gleichnamige Tabellen in der Zieldatenbank. Im n\"{a}chsten Schritt werden unsere Tabellen in der Zieldatenbank erstellt (\texttt{createTables\_dst()}) und sogleich mit Daten aus der Quelldatenbank gef\"{u}llt (\texttt{fillTables\_dst()}). Abschlie{\ss}end werden dann in der  \texttt{deinit()} Methode alle Connections abgebaut.
 
 \begin{figure}[H]
 \centering
@@ -277,7 +278,7 @@ Die aquirierten Feature Vektoren wurden nun in Weka unter Verwendung des Naive B
 Listing~\ref{lst:fcb} zeigt exemplarisch den Naive Bayes Klassifikator für die Mannschaft FC Bayern München, wobei in der Cross Validation 10 Faltungen verwendet worden sind. 
 Es wurden $73.53\%$ der Spiele richtig prognostiziert.
 
-\lstinputlisting[language={},inputencoding={utf8},extendedchars=false, label={lst:fcb}, caption={Naive Bayes, Cross Validation}]{bayern_crossval.weka}
+\lstinputlisting[language={},inputencoding={utf8},extendedchars=false, firstline=5, label={lst:fcb}, caption={Naive Bayes, Cross Validation}]{bayern_crossval.weka}
 
 Allgemein stellten wir fest, dass eine richtige Ergebnis-Prognose für einen Verein bei ca.~über $50\%$ liegt und somit deutlich besser als eine Vorhersage, die jedes Spielergebnis (gewonnen, verloren, unentschieden) gleichgewichtet vorhersagt.
 
